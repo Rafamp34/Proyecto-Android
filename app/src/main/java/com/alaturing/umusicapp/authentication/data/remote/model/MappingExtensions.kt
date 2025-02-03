@@ -17,7 +17,7 @@ fun AuthResponseBody.toModel(): User {
         id = this.user.id,
         userName = this.user.username,
         email = this.user.email,
-        imageUrl = processImageUrl(this.user.image?.data?.attributes?.url),
+        imageUrl = this.user.image?.url,
         followers = this.user.followers,
         following = this.user.following,
         token = this.jwt
@@ -51,7 +51,7 @@ fun AuthResponseUser.toModel(): User {
         id = this.id,
         userName = this.username,
         email = this.email,
-        imageUrl = processImageUrl(this.image?.data?.attributes?.url),
+        imageUrl = this.image?.url,
         followers = this.followers,
         following = this.following,
         token = null

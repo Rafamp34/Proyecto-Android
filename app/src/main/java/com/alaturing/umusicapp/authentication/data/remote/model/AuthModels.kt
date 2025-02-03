@@ -16,7 +16,12 @@ data class AuthResponseUser(
     val email: String,
     val followers: Int,
     val following: Int,
-    val image: Media?
+    val image: ImageResponse?
+)
+
+data class ImageResponse(
+    val id: Int,
+    val url: String
 )
 
 data class RegisterRequestBody(

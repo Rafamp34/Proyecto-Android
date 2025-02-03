@@ -2,6 +2,7 @@ package com.alaturing.umusicapp.main.profile.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,14 +13,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import coil3.load
-import coil3.request.crossfade
-import coil3.request.placeholder
 import com.alaturing.umusicapp.R
-import com.alaturing.umusicapp.authentication.model.User
 import com.alaturing.umusicapp.authentication.ui.AuthenticationActivity
 import com.alaturing.umusicapp.databinding.FragmentProfileBinding
-import com.alaturing.umusicapp.main.song.model.Song
-import com.alaturing.umusicapp.main.song.ui.SongsAdapter.SongViewHolder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -39,7 +35,6 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupToolbar()
         observeUiState()
     }
@@ -80,8 +75,18 @@ class ProfileFragment : Fragment() {
                                 binding.followingCount.text = resources.getQuantityString(
                                     R.plurals.following, following, following
                                 )
-                                if (state.user.imageUrl!= null){
-                                    binding.userImage.load(state.user.imageUrl)
+
+                                // Simplified image loading with proper error handling
+                                Log.d("ProfileFragment", "Loading image URL: $imageUrl")
+                                if (imageUrl != null) {
+                                    try {
+                                        binding.userImage.load(imageUrl)
+                                    } catch (e: Exception) {
+                                        Log.e("ProfileFragment", "Error loading image", e)
+                                        binding.userImage.setImageResource(R.drawable.ic_person)
+                                    }
+                                } else {
+                                    binding.userImage.setImageResource(R.drawable.ic_person)
                                 }
                             }
                         }
