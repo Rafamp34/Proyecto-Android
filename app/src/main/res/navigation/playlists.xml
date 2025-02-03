@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/playlists"
+    app:startDestination="@id/playlistsFragment">
+
+    <fragment
+        android:id="@+id/playlistsFragment"
+        android:name="com.alaturing.umusicapp.main.playlist.ui.PlaylistsFragment"
+        android:label="PlaylistsFragment">
+        <action
+            android:id="@+id/action_playlistsFragment_to_playlistDetailFragment"
+            app:destination="@id/playlistDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/playlistDetailFragment"
+        android:name="com.alaturing.umusicapp.main.playlistDetails.PlaylistDetailFragment"
+        android:label="PlaylistDetailFragment">
+        <argument
+            android:name="playlistId"
+            app:argType="integer" />
+    </fragment>
+</navigation>

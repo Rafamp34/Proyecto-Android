@@ -1,0 +1,58 @@
+<resources>
+    <string name="app_name">UMusicApp</string>
+    <string name="login_identifier_hint">Identifier</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_access">Access</string>
+    <string name="login_error">Incorrect user or password</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="login_register">Don\'t have an account? Register</string>
+    <string name="login_email_hint">email</string>
+    <string name="login_repeat_password_hint">Repeat password</string>
+    <string name="login_not_registered">User cannot be registered</string>
+    <string name="login_auth_failed">Incorrect identifier or password</string>
+    <string name="home">Home</string>
+    <string name="incidents">Incidents</string>
+    <string name="solved">Solved</string>
+    <string name="report_incident">Report</string>
+    <string name="select_photo">Select photo</string>
+    <string name="incident_captured_image">Incident captured image</string>
+    <string name="take_picture">Take picture</string>
+    <string name="view_all" />
+    <string name="logout" />
+    <string name="songs" />
+    <string name="playlists" />
+    <plurals name="reported">
+        <item quantity="zero">No reported incidents</item>
+        <item quantity="one">%d reported incident</item>
+        <item quantity="other">%d reported incidents</item>
+    </plurals>
+    <plurals name="unresolved">
+        <item quantity="zero">All incidents resolved :)</item>
+        <item quantity="one">%d unresolved incident</item>
+        <item quantity="other">%d unresolved incidents</item>
+    </plurals>
+    <!-- Plurals para los contadores -->
+    <plurals name="recent_songs">
+        <item quantity="zero">No hay canciones recientes</item>
+        <item quantity="one">%d canción reciente</item>
+        <item quantity="other">%d canciones recientes</item>
+    </plurals>
+
+    <plurals name="playlists">
+        <item quantity="zero">No hay playlists</item>
+        <item quantity="one">%d playlist</item>
+        <item quantity="other">%d playlists</item>
+    </plurals>
+    <plurals name="followers">
+        <item quantity="one">%d seguidor</item>
+        <item quantity="other">%d seguidores</item>
+    </plurals>
+    <plurals name="following">
+        <item quantity="one">%d seguido</item>
+        <item quantity="other">%d seguidos</item>
+    </plurals>
+    <string name="profile">Perfil</string>
+    <string name="playlist_cover" />
+    <string name="album_art" />
+    <string name="search" />
+</resources>
