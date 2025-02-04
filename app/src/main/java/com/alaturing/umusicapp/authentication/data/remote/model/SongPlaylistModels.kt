@@ -15,9 +15,25 @@ data class SongResponse(
 
 data class SongAttributes(
     val name: String,
-    val author: String,
+    val lyrics: String?,
     val album: String,
     val duration: Int,
+    val image: Media?,
+    val artists: ArtistsData?
+)
+
+data class ArtistsData(
+    val data: List<ArtistResponse>
+)
+
+data class ArtistResponse(
+    val id: Int,
+    val attributes: ArtistAttributes
+)
+
+data class ArtistAttributes(
+    val name: String,
+    val listeners: Int,
     val image: Media?
 )
 

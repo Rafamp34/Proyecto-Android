@@ -36,7 +36,8 @@ class PlaylistSongAdapter(
 
         fun bind(song: Song) {
             binding.songName.text = song.name
-            binding.songArtist.text = song.author
+            // Concatenar los nombres de los artistas
+            binding.songArtist.text = song.artists.joinToString(", ") { it.name }
             binding.songDuration.text = formatDuration(song.duration)
             song.imageUrl?.let {
                 binding.songCover.load(it) {

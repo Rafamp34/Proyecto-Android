@@ -24,13 +24,11 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = SearchUiState.Loading
 
-            // Aquí implementarías la lógica de búsqueda real
             if (query.isEmpty()) {
                 _uiState.value = SearchUiState.Initial
                 return@launch
             }
 
-            // Ejemplo de búsqueda combinando canciones y playlists
             val songsResult = songRepository.readAll()
             val playlistsResult = playlistRepository.readAll()
 
@@ -38,10 +36,12 @@ class SearchViewModel @Inject constructor(
                 val songs = songsResult.getOrNull() ?: emptyList()
                 val playlists = playlistsResult.getOrNull() ?: emptyList()
 
-                // Filtrar por la query
-                val filteredSongs = songs.filter {
-                    it.name.contains(query, ignoreCase = true) ||
-                            it.author.contains(query, ignoreCase = true)
+                // Actualizada la lógica de filtrado para buscar también en artistas
+                val filteredSongs = songs.filter { song ->
+                    song.name.contains(query, ignoreCase = true) ||
+                            song.artists.any { artist ->
+                                artist.name.contains(query, ignoreCase = true)
+                            }
                 }
                 val filteredPlaylists = playlists.filter {
                     it.name.contains(query, ignoreCase = true) ||

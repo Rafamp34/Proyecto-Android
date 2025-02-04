@@ -16,7 +16,7 @@ class SongsAdapter : ListAdapter<Song, SongsAdapter.SongViewHolder>(SongDiffCall
     ) : ViewHolder(binding.root) {
         fun bind(song: Song) {
             binding.songTitle.text = song.name
-            binding.songArtist.text = song.author
+            binding.songArtist.text = song.artists.joinToString(", ") { it.name }
             binding.songDuration.text = formatDuration(song.duration)
             song.imageUrl?.let { binding.songImage.load(it) }
         }

@@ -1,5 +1,6 @@
 package com.alaturing.umusicapp.authentication.data.remote.model
 
+import com.alaturing.umusicapp.authentication.model.Artist
 import com.alaturing.umusicapp.authentication.model.User
 import com.alaturing.umusicapp.di.NetworkModule
 import com.alaturing.umusicapp.main.song.model.Song
@@ -27,9 +28,19 @@ fun SongResponse.toModel(): Song {
     return Song(
         id = this.id,
         name = this.attributes.name,
-        author = this.attributes.author,
+        lyrics = this.attributes.lyrics,
         album = this.attributes.album,
         duration = this.attributes.duration,
+        imageUrl = processImageUrl(this.attributes.image?.data?.attributes?.url),
+        artists = this.attributes.artists?.data?.map { it.toModel() } ?: emptyList()
+    )
+}
+
+fun ArtistResponse.toModel(): Artist {
+    return Artist(
+        id = this.id,
+        name = this.attributes.name,
+        listeners = this.attributes.listeners,
         imageUrl = processImageUrl(this.attributes.image?.data?.attributes?.url)
     )
 }
@@ -61,9 +72,10 @@ fun PlaylistSongResponse.toModel(): Song {
     return Song(
         id = this.id,
         name = this.attributes.name,
-        author = this.attributes.author,
+        lyrics = this.attributes.lyrics,
         album = this.attributes.album,
         duration = this.attributes.duration,
-        imageUrl = processImageUrl(this.attributes.image?.data?.attributes?.url)
+        imageUrl = processImageUrl(this.attributes.image?.data?.attributes?.url),
+        artists = this.attributes.artists?.data?.map { it.toModel() } ?: emptyList()
     )
 }

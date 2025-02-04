@@ -23,7 +23,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
     companion object {
-        const val STRAPI = "https://umusic-mal5.onrender.com"
+        const val STRAPI = "https://umusic-rtfn.onrender.com"
     }
 
     /**

@@ -4,13 +4,11 @@ import PlaylistSongAdapter
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.compose.ui.test.isEditable
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -97,17 +95,25 @@ class PlaylistDetailFragment : Fragment() {
             val authorTextView = view.findViewById<TextView>(R.id.songAuthor)
             val durationTextView = view.findViewById<TextView>(R.id.songDuration)
 
-            authorTextView.text = song?.author
-            durationTextView.text = song?.duration.toString()
-            textView.text = song?.name
-            song?.imageUrl?.let {
-                imageView.load(it) {
-                    placeholder(R.drawable.placeholder_song)
-                    crossfade(true)
+            song?.let {
+                textView.text = it.name
+                authorTextView.text = it.artists.joinToString(", ") { artist -> artist.name }
+                durationTextView.text = formatDuration(it.duration)
+                it.imageUrl?.let { url ->
+                    imageView.load(url) {
+                        placeholder(R.drawable.placeholder_song)
+                        crossfade(true)
+                    }
                 }
             }
 
             return view
+        }
+
+        private fun formatDuration(seconds: Int): String {
+            val minutes = seconds / 60
+            val remainingSeconds = seconds % 60
+            return String.format("%d:%02d", minutes, remainingSeconds)
         }
     }
 
