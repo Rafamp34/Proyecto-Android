@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.camera.core)
     implementation(libs.camera.view)
+    implementation(libs.androidx.ui.test.android)
     kapt(libs.hilt.android.compiler)
 
     // Navigation components

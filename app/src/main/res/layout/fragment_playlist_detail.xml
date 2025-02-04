@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Actualización de fragment_playlist_detail.xml -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -80,28 +81,40 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@android:color/transparent"
-                app:navigationIcon="@drawable/ic_back" />
+                app:navigationIcon="@drawable/ic_back"/>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/content"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/addSongButton"
+            style="@style/Widget.Material3.Button.IconButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            app:icon="@drawable/ic_add"
+            app:iconTint="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/playlistSongs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
+            android:layout_height="0dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/addSongButton"
             tools:itemCount="5"
-            tools:listitem="@layout/song_item" />
+            tools:listitem="@layout/playlist_song_item" />
 
-    </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progressBar"

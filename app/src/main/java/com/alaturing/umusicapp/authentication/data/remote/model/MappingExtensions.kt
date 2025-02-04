@@ -1,6 +1,5 @@
 package com.alaturing.umusicapp.authentication.data.remote.model
 
-import com.alaturing.umusicapp.authentication.data.remote.PlaylistSongResponse
 import com.alaturing.umusicapp.authentication.model.User
 import com.alaturing.umusicapp.di.NetworkModule
 import com.alaturing.umusicapp.main.song.model.Song

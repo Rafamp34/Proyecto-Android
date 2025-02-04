@@ -12,7 +12,9 @@ import com.alaturing.umusicapp.databinding.PlaylistSongItemBinding
 import com.alaturing.umusicapp.main.song.model.Song
 import com.alaturing.umusicapp.main.song.ui.SongsAdapter
 
-class PlaylistSongAdapter : ListAdapter<Song, PlaylistSongAdapter.SongViewHolder>(SongsAdapter.SongDiffCallback) {
+class PlaylistSongAdapter(
+    private val onDeleteClick: (Song) -> Unit
+) : ListAdapter<Song, PlaylistSongAdapter.SongViewHolder>(SongDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
         val binding = PlaylistSongItemBinding.inflate(
@@ -20,25 +22,31 @@ class PlaylistSongAdapter : ListAdapter<Song, PlaylistSongAdapter.SongViewHolder
             parent,
             false
         )
-        return SongViewHolder(binding)
+        return SongViewHolder(binding, onDeleteClick)
     }
 
     override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
-        val song = getItem(position)
-        holder.bind(song)
+        holder.bind(getItem(position))
     }
 
     class SongViewHolder(
-        private val binding: PlaylistSongItemBinding
+        private val binding: PlaylistSongItemBinding,
+        private val onDeleteClick: (Song) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(song: Song) {
-            binding.root.post {
-                binding.songName.text = song.name
-                binding.songArtist.text = song.author
-                binding.songDuration.text = formatDuration(song.duration)
-                song.imageUrl?.let { binding.songCover.load(it) }
+            binding.songName.text = song.name
+            binding.songArtist.text = song.author
+            binding.songDuration.text = formatDuration(song.duration)
+            song.imageUrl?.let {
+                binding.songCover.load(it) {
+                    crossfade(true)
+                    placeholder(R.drawable.placeholder_song)
+                }
+            }
 
+            binding.deleteButton.setOnClickListener {
+                onDeleteClick(song)
             }
         }
 
@@ -47,15 +55,15 @@ class PlaylistSongAdapter : ListAdapter<Song, PlaylistSongAdapter.SongViewHolder
             val remainingSeconds = seconds % 60
             return String.format("%d:%02d", minutes, remainingSeconds)
         }
+    }
 
-        companion object {
-            private val SongDiffCallback = object : DiffUtil.ItemCallback<Song>() {
-                override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean =
-                    oldItem.id == newItem.id
+    companion object {
+        private val SongDiffCallback = object : DiffUtil.ItemCallback<Song>() {
+            override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean =
+                oldItem.id == newItem.id
 
-                override fun areContentsTheSame(oldItem: Song, newItem: Song): Boolean =
-                    oldItem == newItem
-            }
+            override fun areContentsTheSame(oldItem: Song, newItem: Song): Boolean =
+                oldItem == newItem
         }
     }
 }

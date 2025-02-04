@@ -1,7 +1,5 @@
 package com.alaturing.umusicapp.common.remote
 
-
-import com.alaturing.umusicapp.authentication.data.remote.PlaylistSongsResponseBody
 import com.alaturing.umusicapp.authentication.data.remote.model.AuthRequestBody
 import com.alaturing.umusicapp.authentication.data.remote.model.AuthResponseBody
 import com.alaturing.umusicapp.authentication.data.remote.model.AuthResponseUser
@@ -10,17 +8,8 @@ import com.alaturing.umusicapp.authentication.data.remote.model.PlaylistsRespons
 import com.alaturing.umusicapp.authentication.data.remote.model.RegisterRequestBody
 import com.alaturing.umusicapp.authentication.data.remote.model.SongResponseBody
 import com.alaturing.umusicapp.authentication.data.remote.model.SongsResponseBody
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Multipart
-import retrofit2.http.POST
-import retrofit2.http.Part
-import retrofit2.http.PartMap
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 /**
  * API del remoto para Retrofit
@@ -30,6 +19,13 @@ interface StrapiApi: StrapiAuthenticationApi,
     StrapiPlaylistApi,
     StrapiProfileApi
 
+data class PlaylistUpdateBody(
+    val data: PlaylistUpdateData
+)
+
+data class PlaylistUpdateData(
+    val song_IDS: List<Int>
+)
 
 /**
  * Autenticación
@@ -73,17 +69,21 @@ interface StrapiPlaylistApi {
         @Query("populate") populate: String = "image,song_IDS.image"
     ): Response<PlaylistResponseBody>
 
-    @GET("/api/playlists?populate[image]=*&populate[song_IDS][populate][image]=*")
+    @GET("/api/playlists/{id}/songs")
     suspend fun getPlaylistSongs(
-        @Path("id") id: Int
+        @Path("id") id: Int,
+        @Query("populate") populate: String = "*"
     ): Response<SongsResponseBody>
+
+    @PUT("/api/playlists/{id}")
+    suspend fun updatePlaylist(
+        @Path("id") id: Int,
+        @Body data: PlaylistUpdateBody
+    ): Response<PlaylistResponseBody>
 }
+
 
 interface StrapiProfileApi {
     @GET("/api/users/me?populate[image]=*")
     suspend fun getProfile(): Response<AuthResponseUser>
 }
-
-/**
- * Incidentes
- */

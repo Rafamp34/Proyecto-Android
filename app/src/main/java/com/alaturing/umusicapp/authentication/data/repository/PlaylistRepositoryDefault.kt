@@ -26,4 +26,12 @@ class PlaylistRepositoryDefault @Inject constructor(
     override suspend fun getPlaylistSongs(id: Int): Result<List<Song>> {
         return remote.getPlaylistSongs(id)
     }
+
+    override suspend fun addSongToPlaylist(playlistId: Int, songId: Int): Result<Unit> {
+        return remote.addSongToPlaylist(playlistId, songId)
+    }
+
+    override suspend fun removeSongFromPlaylist(playlistId: Int, songId: Int): Result<Unit> {
+        return remote.removeSongFromPlaylist(playlistId, songId)
+    }
 }

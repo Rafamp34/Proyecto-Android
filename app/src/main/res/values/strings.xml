@@ -54,5 +54,13 @@
     <string name="profile">Perfil</string>
     <string name="playlist_cover" />
     <string name="album_art" />
-    <string name="search" />
+    <string name="search">Buscar</string>
+
+    <string name="edit_playlist">Editar playlist</string>
+    <string name="add_song">Añadir canción</string>
+    <string name="add_song_to_playlist">Añadir canción a la playlist</string>
+    <string name="remove_song">Eliminar canción</string>
+    <string name="remove_song_message">¿Quieres eliminar %1$s de la playlist?</string>
+    <string name="remove">Eliminar</string>
+    <string name="cancel">Cancelar</string>
 </resources>
