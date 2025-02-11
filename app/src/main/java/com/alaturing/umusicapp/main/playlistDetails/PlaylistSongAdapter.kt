@@ -39,9 +39,19 @@ class PlaylistSongAdapter(
 
         fun bind(song: Song) {
             binding.songName.text = song.name
+
+            // Agregar log para debugging
+            Log.d("PlaylistSongAdapter", "Binding song: ${song.name} with ${song.artists.size} artists")
+            song.artists.forEach {
+                Log.d("PlaylistSongAdapter", "Artist for ${song.name}: ${it.name}")
+            }
+
             val artistsNames = song.artists.map { it.name }.joinToString(", ")
             binding.playlistSongAuthor.text = artistsNames
             binding.playlistSongAuthor.isVisible = artistsNames.isNotBlank()
+
+            // Log del texto final
+            Log.d("PlaylistSongAdapter", "Final artist text: $artistsNames")
             binding.songDuration.text = formatDuration(song.duration)
             song.imageUrl?.let {
                 binding.songCover.load(it) {

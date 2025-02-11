@@ -66,13 +66,13 @@ interface StrapiPlaylistApi {
     @GET("/api/playlists/{id}")
     suspend fun getPlaylistById(
         @Path("id") id: Int,
-        @Query("populate") populate: String = "image,song_IDS.image,song_IDS.artists_ID.*"
+        @Query("populate") populate: String = "image,song_IDS.image,song_IDS.artists_IDS"
     ): Response<PlaylistResponseBody>
 
     @GET("/api/playlists/{id}/songs")
     suspend fun getPlaylistSongs(
         @Path("id") id: Int,
-        @Query("populate") populate: String = "artists_IDS.name"
+        @Query("populate") populate: String = "artists_IDS"
     ): Response<SongsResponseBody>
 
     @PUT("/api/playlists/{id}")
