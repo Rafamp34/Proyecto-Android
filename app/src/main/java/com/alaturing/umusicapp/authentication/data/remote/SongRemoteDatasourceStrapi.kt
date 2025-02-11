@@ -1,6 +1,7 @@
 package com.alaturing.umusicapp.authentication.data.remote
 
-import com.alaturing.umusicapp.authentication.data.remote.model.toModel
+import android.util.Log
+import com.alaturing.umusicapp.authentication.data.remote.model.toSong
 import com.alaturing.umusicapp.common.remote.StrapiApi
 import com.alaturing.umusicapp.main.song.model.Song
 import javax.inject.Inject
@@ -10,20 +11,38 @@ class SongRemoteDatasourceStrapi @Inject constructor(
 ) : SongRemoteDatasource {
 
     override suspend fun getAll(): Result<List<Song>> {
-        val response = api.getSongs()
-        return if (response.isSuccessful) {
-            Result.success(response.body()!!.data.map { it.toModel() })
-        } else {
-            Result.failure(RuntimeException())
+        return try {
+            val response = api.getSongs()
+            if (response.isSuccessful && response.body() != null) {
+                val songs = response.body()!!.data.map { it.toSong() }
+                Log.d("SongRemoteDS", "Songs loaded: ${songs.size}")
+                Result.success(songs)
+            } else {
+                Log.e("SongRemoteDS", "Error loading songs: ${response.code()}")
+                Log.e("SongRemoteDS", "Error body: ${response.errorBody()?.string()}")
+                Result.failure(RuntimeException("Error loading songs: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Log.e("SongRemoteDS", "Exception loading songs", e)
+            Result.failure(e)
         }
     }
 
     override suspend fun getById(id: Int): Result<Song> {
-        val response = api.getSongById(id)
-        return if (response.isSuccessful) {
-            Result.success(response.body()!!.data.toModel())
-        } else {
-            Result.failure(RuntimeException())
+        return try {
+            val response = api.getSongById(id)
+            if (response.isSuccessful && response.body() != null) {
+                val song = response.body()!!.data.toSong()
+                Log.d("SongRemoteDS", "Song loaded: ${song.name}")
+                Result.success(song)
+            } else {
+                Log.e("SongRemoteDS", "Error loading song: ${response.code()}")
+                Log.e("SongRemoteDS", "Error body: ${response.errorBody()?.string()}")
+                Result.failure(RuntimeException("Error loading song: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Log.e("SongRemoteDS", "Exception loading song", e)
+            Result.failure(e)
         }
     }
 }

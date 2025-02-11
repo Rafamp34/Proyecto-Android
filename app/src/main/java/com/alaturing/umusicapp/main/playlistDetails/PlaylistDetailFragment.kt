@@ -3,6 +3,7 @@ package com.alaturing.umusicapp.main.playlistDetails
 import PlaylistSongAdapter
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -66,6 +67,7 @@ class PlaylistDetailFragment : Fragment() {
                     // Implementar edición de playlist
                     true
                 }
+
                 else -> false
             }
         }
@@ -74,8 +76,11 @@ class PlaylistDetailFragment : Fragment() {
     private fun setupRecyclerView() {
         songsAdapter = PlaylistSongAdapter(
             onDeleteClick = { song ->
-                showDeleteSongDialog(song)
-            }
+                if ((viewModel.uiState.value as? PlaylistDetailUiState.Success)?.playlist?.isEditable == true) {
+                    showDeleteSongDialog(song)
+                }
+            },
+            isEditable = false  // Valor inicial, se actualizará cuando se cargue el estado
         )
         binding.playlistSongs.adapter = songsAdapter
     }
@@ -146,12 +151,6 @@ class PlaylistDetailFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
                     when (state) {
-                        is PlaylistDetailUiState.Loading -> {
-                            binding.progressBar.isVisible = true
-                            binding.playlistSongs.isVisible = false
-                            binding.errorText.isVisible = false
-                            binding.addSongButton.isVisible = false
-                        }
                         is PlaylistDetailUiState.Success -> {
                             binding.progressBar.isVisible = false
                             binding.playlistSongs.isVisible = true
@@ -163,14 +162,29 @@ class PlaylistDetailFragment : Fragment() {
                                 binding.playlistDuration.text = duration
                                 imageUrl?.let { binding.playlistImage.load(it) }
                                 binding.addSongButton.isVisible = isEditable
+
+                                // Actualizar el adaptador con el estado de edición correcto
+                                songsAdapter = PlaylistSongAdapter(
+                                    onDeleteClick = { song ->
+                                        showDeleteSongDialog(song)
+                                    },
+                                    isEditable = isEditable
+                                )
+                                binding.playlistSongs.adapter = songsAdapter
+                                songsAdapter.submitList(state.songs)
                             }
-                            songsAdapter.submitList(state.songs)
                         }
+
+                        is PlaylistDetailUiState.Loading -> {
+                            binding.progressBar.isVisible = true
+                            binding.playlistSongs.isVisible = false
+                            binding.errorText.isVisible = false
+                        }
+
                         is PlaylistDetailUiState.Error -> {
                             binding.progressBar.isVisible = false
                             binding.playlistSongs.isVisible = false
                             binding.errorText.isVisible = true
-                            binding.addSongButton.isVisible = false
                             binding.errorText.text = state.message
                         }
                     }

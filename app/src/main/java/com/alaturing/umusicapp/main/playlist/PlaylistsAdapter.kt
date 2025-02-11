@@ -1,4 +1,3 @@
-// PlaylistsAdapter.kt
 package com.alaturing.umusicapp.main.playlist
 
 import android.view.LayoutInflater
@@ -22,7 +21,7 @@ class PlaylistsAdapter(
 
             binding.playlistTitle.text = playlist.name
             binding.playlistAuthor.text = playlist.author
-            binding.playlistDuration.text = formatDuration(playlist.duration)
+            binding.playlistDuration.text = formatDuration(playlist.duration.toIntOrNull() ?: 0)
             playlist.imageUrl?.let { binding.playlistCover.load(it) }
         }
 

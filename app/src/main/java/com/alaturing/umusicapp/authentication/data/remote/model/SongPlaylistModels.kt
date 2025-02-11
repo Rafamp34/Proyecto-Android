@@ -19,7 +19,7 @@ data class SongAttributes(
     val album: String,
     val duration: Int,
     val image: Media?,
-    val artists: ArtistsData?
+    val artists_IDS: ArtistsData  // Cambiado de 'artists' a 'artists_IDS'
 )
 
 data class ArtistsData(
@@ -32,8 +32,8 @@ data class ArtistResponse(
 )
 
 data class ArtistAttributes(
-    val name: String,
-    val listeners: Int,
+    val Name: String,  // Cambiado de 'name' a 'Name' para coincidir con la API
+    val listeners: String,  // Cambiado de Int a String para coincidir con la API
     val image: Media?
 )
 
@@ -50,16 +50,52 @@ data class PlaylistResponse(
     val attributes: PlaylistAttributes
 )
 
-data class SongIdsData(
-    val data: List<SongResponse>
-)
-
 data class PlaylistAttributes(
     val name: String,
     val author: String,
-    val duration: Int,
+    val duration: String,  // Cambiado a String ya que viene como string en la API
     val image: Media?,
-    val song_IDS: SongIdsData?
+    val song_IDS: PlaylistSongIdsData?,
+    val users_IDS: UsersIdsData?
+)
+
+data class PlaylistSongIdsData(
+    val data: List<PlaylistSongResponse>
+)
+
+data class PlaylistSongResponse(
+    val id: Int,
+    val attributes: PlaylistSongAttributes
+)
+
+data class PlaylistSongAttributes(
+    val name: String,
+    val album: String,
+    val duration: Int,
+    val lyrics: String?,
+    val image: Media?,
+    val artists_IDS: ArtistsData?
+)
+
+data class UsersIdsData(           // Nueva clase para users_IDS
+    val data: List<UserData>
+)
+
+data class UserData(               // Nueva clase para representar el usuario en la respuesta
+    val id: Int,
+    val attributes: UserAttributes
+)
+
+data class UserAttributes(         // Nueva clase para los atributos del usuario
+    val username: String,
+    val email: String,
+    val provider: String,
+    val confirmed: Boolean,
+    val blocked: Boolean,
+    val createdAt: String,
+    val updatedAt: String,
+    val followers: Int?,
+    val following: Int?
 )
 
 data class Media(
@@ -79,6 +115,9 @@ data class MediaFormats(
     val small: ImageAttributes?,
     val thumbnail: ImageAttributes?
 )
+
+
+
 
 data class ImageAttributes(
     val url: String

@@ -1,6 +1,7 @@
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +14,8 @@ import com.alaturing.umusicapp.main.song.model.Song
 import com.alaturing.umusicapp.main.song.ui.SongsAdapter
 
 class PlaylistSongAdapter(
-    private val onDeleteClick: (Song) -> Unit
+    private val onDeleteClick: (Song) -> Unit,
+    private val isEditable: Boolean = false
 ) : ListAdapter<Song, PlaylistSongAdapter.SongViewHolder>(SongDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
@@ -22,7 +24,7 @@ class PlaylistSongAdapter(
             parent,
             false
         )
-        return SongViewHolder(binding, onDeleteClick)
+        return SongViewHolder(binding, onDeleteClick, isEditable)
     }
 
     override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
@@ -31,13 +33,15 @@ class PlaylistSongAdapter(
 
     class SongViewHolder(
         private val binding: PlaylistSongItemBinding,
-        private val onDeleteClick: (Song) -> Unit
+        private val onDeleteClick: (Song) -> Unit,
+        private val isEditable: Boolean
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(song: Song) {
             binding.songName.text = song.name
-            // Concatenar los nombres de los artistas
-            binding.songArtist.text = song.artists.joinToString(", ") { it.name }
+            val artistsNames = song.artists.map { it.name }.joinToString(", ")
+            binding.playlistSongAuthor.text = artistsNames
+            binding.playlistSongAuthor.isVisible = artistsNames.isNotBlank()
             binding.songDuration.text = formatDuration(song.duration)
             song.imageUrl?.let {
                 binding.songCover.load(it) {
@@ -46,6 +50,8 @@ class PlaylistSongAdapter(
                 }
             }
 
+            // Controlar la visibilidad del botón de borrar según los permisos
+            binding.deleteButton.isVisible = isEditable
             binding.deleteButton.setOnClickListener {
                 onDeleteClick(song)
             }

@@ -2,6 +2,7 @@ package com.alaturing.umusicapp.authentication.data.remote
 
 import android.util.Log
 import com.alaturing.umusicapp.authentication.data.remote.model.toModel
+import com.alaturing.umusicapp.authentication.data.remote.model.toSong
 import com.alaturing.umusicapp.common.remote.PlaylistUpdateBody
 import com.alaturing.umusicapp.common.remote.PlaylistUpdateData
 import com.alaturing.umusicapp.common.remote.StrapiApi
@@ -14,30 +15,46 @@ class PlaylistRemoteDatasourceStrapi @Inject constructor(
 ) : PlaylistRemoteDatasource {
 
     override suspend fun getAll(): Result<List<Playlist>> {
-        val response = api.getPlaylists()
-        return if (response.isSuccessful) {
-            Result.success(response.body()!!.data.map { it.toModel() })
-        } else {
-            Result.failure(RuntimeException())
+        return try {
+            val response = api.getPlaylists()
+            if (response.isSuccessful && response.body() != null) {
+                val playlists = response.body()!!.data.map { it.toModel() }
+                Log.d("PlaylistRemoteDS", "Playlists loaded: ${playlists.size}")
+                Result.success(playlists)
+            } else {
+                Log.e("PlaylistRemoteDS", "Error loading playlists: ${response.code()}")
+                Result.failure(RuntimeException("Error loading playlists: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Log.e("PlaylistRemoteDS", "Exception loading playlists", e)
+            Result.failure(e)
         }
     }
 
     override suspend fun getById(id: Int): Result<Playlist> {
-        val response = api.getPlaylistById(id)
-        return if (response.isSuccessful) {
-            Result.success(response.body()!!.data.toModel())
-        } else {
-            Result.failure(RuntimeException())
+        return try {
+            val response = api.getPlaylistById(id)
+            if (response.isSuccessful && response.body() != null) {
+                val playlist = response.body()!!.data.toModel()
+                Log.d("PlaylistRemoteDS", "Playlist loaded: ${playlist.name}")
+                Result.success(playlist)
+            } else {
+                Log.e("PlaylistRemoteDS", "Error loading playlist: ${response.code()}")
+                Result.failure(RuntimeException("Error loading playlist: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Log.e("PlaylistRemoteDS", "Exception loading playlist", e)
+            Result.failure(e)
         }
     }
 
     override suspend fun getPlaylistSongs(id: Int): Result<List<Song>> {
-        try {
+        return try {
             val response = api.getPlaylistSongs(id)
             Log.d("PlaylistRemoteDS", "Response: ${response.isSuccessful}, Code: ${response.code()}")
 
-            return if (response.isSuccessful && response.body() != null) {
-                val songs = response.body()!!.data.map { it.toModel() }
+            if (response.isSuccessful && response.body() != null) {
+                val songs = response.body()!!.data.map { it.toSong() }
                 Log.d("PlaylistRemoteDS", "Songs loaded: ${songs.size}")
                 Result.success(songs)
             } else {
@@ -46,20 +63,18 @@ class PlaylistRemoteDatasourceStrapi @Inject constructor(
             }
         } catch (e: Exception) {
             Log.e("PlaylistRemoteDS", "Exception loading songs", e)
-            return Result.failure(e)
+            Result.failure(e)
         }
     }
 
     override suspend fun removeSongFromPlaylist(playlistId: Int, songId: Int): Result<Unit> {
-        try {
-            // Primero obtenemos la playlist actual
+        return try {
             val playlistResult = getById(playlistId)
             if (playlistResult.isFailure) {
                 return Result.failure(playlistResult.exceptionOrNull() ?: RuntimeException())
             }
 
             val currentPlaylist = playlistResult.getOrNull()!!
-            // Filtramos la canción a eliminar
             val updatedSongIds = currentPlaylist.songs.map { it.id }.filter { it != songId }
 
             val response = api.updatePlaylist(
@@ -67,7 +82,8 @@ class PlaylistRemoteDatasourceStrapi @Inject constructor(
                 PlaylistUpdateBody(PlaylistUpdateData(updatedSongIds))
             )
 
-            return if (response.isSuccessful) {
+            if (response.isSuccessful) {
+                Log.d("PlaylistRemoteDS", "Song removed successfully")
                 Result.success(Unit)
             } else {
                 Log.e("PlaylistRemoteDS", "Error removing song: ${response.errorBody()?.string()}")
@@ -75,19 +91,18 @@ class PlaylistRemoteDatasourceStrapi @Inject constructor(
             }
         } catch (e: Exception) {
             Log.e("PlaylistRemoteDS", "Exception removing song", e)
-            return Result.failure(e)
+            Result.failure(e)
         }
     }
 
     override suspend fun addSongToPlaylist(playlistId: Int, songId: Int): Result<Unit> {
-        try {
+        return try {
             val playlistResult = getById(playlistId)
             if (playlistResult.isFailure) {
                 return Result.failure(playlistResult.exceptionOrNull() ?: RuntimeException())
             }
 
             val currentPlaylist = playlistResult.getOrNull()!!
-            // Añadimos la nueva canción a la lista
             val updatedSongIds = currentPlaylist.songs.map { it.id } + songId
 
             val response = api.updatePlaylist(
@@ -95,7 +110,8 @@ class PlaylistRemoteDatasourceStrapi @Inject constructor(
                 PlaylistUpdateBody(PlaylistUpdateData(updatedSongIds))
             )
 
-            return if (response.isSuccessful) {
+            if (response.isSuccessful) {
+                Log.d("PlaylistRemoteDS", "Song added successfully")
                 Result.success(Unit)
             } else {
                 Log.e("PlaylistRemoteDS", "Error adding song: ${response.errorBody()?.string()}")
@@ -103,7 +119,7 @@ class PlaylistRemoteDatasourceStrapi @Inject constructor(
             }
         } catch (e: Exception) {
             Log.e("PlaylistRemoteDS", "Exception adding song", e)
-            return Result.failure(e)
+            Result.failure(e)
         }
     }
 }

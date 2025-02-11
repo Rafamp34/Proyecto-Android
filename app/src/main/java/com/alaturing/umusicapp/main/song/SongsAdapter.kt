@@ -2,6 +2,7 @@ package com.alaturing.umusicapp.main.song.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -16,7 +17,9 @@ class SongsAdapter : ListAdapter<Song, SongsAdapter.SongViewHolder>(SongDiffCall
     ) : ViewHolder(binding.root) {
         fun bind(song: Song) {
             binding.songTitle.text = song.name
-            binding.songArtist.text = song.artists.joinToString(", ") { it.name }
+            val artistsNames = song.artists.map { it.name }.joinToString(", ")
+            binding.songArtist.text = artistsNames
+            binding.songArtist.isVisible = artistsNames.isNotBlank()
             binding.songDuration.text = formatDuration(song.duration)
             song.imageUrl?.let { binding.songImage.load(it) }
         }

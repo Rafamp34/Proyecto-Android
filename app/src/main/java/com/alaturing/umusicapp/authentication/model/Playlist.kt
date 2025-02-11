@@ -6,7 +6,8 @@ data class Playlist(
     val id: Int,
     val name: String,
     val author: String,
-    val duration: Int,
+    val duration: String,
     val imageUrl: String?,
+    val userId: Int,
     val songs: List<Song> = emptyList()
 )

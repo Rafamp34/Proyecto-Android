@@ -30,7 +30,7 @@
         tools:text="Nombre de la canción"/>
 
     <TextView
-        android:id="@+id/songArtist"
+        android:id="@+id/playlistSongAuthor"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"

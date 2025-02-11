@@ -1,5 +1,6 @@
 package com.alaturing.umusicapp.main.playlistDetails
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alaturing.umusicapp.authentication.data.repository.PlaylistRepository
@@ -40,6 +41,13 @@ class PlaylistDetailViewModel @Inject constructor(
                     val playlist = playlistResult.getOrNull()!!
                     val user = userResult.getOrNull()!!
 
+                    // Log each song with its artists
+                    playlist.songs.forEach { song ->
+                        Log.d("PlaylistViewModel", "Playlist song data - Name: ${song.name}")
+                        Log.d("PlaylistViewModel", "Playlist song data - Artists count: ${song.artists.size}")
+                        Log.d("PlaylistViewModel", "Playlist song data - Artists: ${song.artists.joinToString(", ") { it.name }}")
+                    }
+
                     _uiState.value = PlaylistDetailUiState.Success(
                         playlist = PlaylistDetailModel(
                             id = playlist.id,
@@ -50,14 +58,16 @@ class PlaylistDetailViewModel @Inject constructor(
                             isEditable = playlist.author == user.userName
                         ),
                         songs = playlist.songs
-                    )
+                    ).also { state ->
+                        Log.d("PlaylistViewModel", "Emitting state with ${(state as PlaylistDetailUiState.Success).songs.size} songs")
+                    }
 
-                    // Load available songs for adding to playlist
                     loadAvailableSongs(playlist.songs)
                 } else {
                     _uiState.value = PlaylistDetailUiState.Error("Error cargando la playlist")
                 }
             } catch (e: Exception) {
+                Log.e("PlaylistViewModel", "Error loading playlist", e)
                 _uiState.value = PlaylistDetailUiState.Error(e.message ?: "Error desconocido")
             }
         }
