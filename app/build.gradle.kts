@@ -40,6 +40,16 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    packaging {
+        resources {
+            excludes += listOf(
+                "/META-INF/DEPENDENCIES",
+                "/META-INF/INDEX.LIST",
+                "/META-INF/io.netty.versions.properties"
+            )
+        }
+    }
 }
 
 dependencies {
@@ -68,6 +78,7 @@ dependencies {
     implementation(libs.camera.core)
     implementation(libs.camera.view)
     implementation(libs.androidx.ui.test.android)
+    implementation(libs.firebase.appdistribution.gradle)
     kapt(libs.hilt.android.compiler)
 
     // Navigation components
@@ -87,6 +98,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation (libs.okhttp.v491)
+    implementation (libs.logging.interceptor.v491)
 }
 
 kapt {

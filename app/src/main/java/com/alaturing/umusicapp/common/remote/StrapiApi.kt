@@ -3,11 +3,14 @@ package com.alaturing.umusicapp.common.remote
 import com.alaturing.umusicapp.authentication.data.remote.model.AuthRequestBody
 import com.alaturing.umusicapp.authentication.data.remote.model.AuthResponseBody
 import com.alaturing.umusicapp.authentication.data.remote.model.AuthResponseUser
+import com.alaturing.umusicapp.authentication.data.remote.model.CreatePlaylistBody
 import com.alaturing.umusicapp.authentication.data.remote.model.PlaylistResponseBody
 import com.alaturing.umusicapp.authentication.data.remote.model.PlaylistsResponseBody
 import com.alaturing.umusicapp.authentication.data.remote.model.RegisterRequestBody
 import com.alaturing.umusicapp.authentication.data.remote.model.SongResponseBody
 import com.alaturing.umusicapp.authentication.data.remote.model.SongsResponseBody
+import com.alaturing.umusicapp.authentication.data.remote.model.UploadResponse
+import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -80,10 +83,20 @@ interface StrapiPlaylistApi {
         @Path("id") id: Int,
         @Body data: PlaylistUpdateBody
     ): Response<PlaylistResponseBody>
+
+    @POST("/api/playlists")
+    suspend fun createPlaylist(@Body body: CreatePlaylistBody): Response<PlaylistResponseBody>
 }
+
 
 
 interface StrapiProfileApi {
     @GET("/api/users/me?populate[image]=*")
     suspend fun getProfile(): Response<AuthResponseUser>
+
+    @Multipart
+    @POST("/api/upload")
+    suspend fun uploadFile(
+        @Part file: MultipartBody.Part
+    ): Response<List<UploadResponse>>
 }

@@ -163,7 +163,6 @@ class PlaylistDetailFragment : Fragment() {
                                 imageUrl?.let { binding.playlistImage.load(it) }
                                 binding.addSongButton.isVisible = isEditable
 
-                                // Actualizar el adaptador con el estado de edición correcto
                                 songsAdapter = PlaylistSongAdapter(
                                     onDeleteClick = { song ->
                                         showDeleteSongDialog(song)

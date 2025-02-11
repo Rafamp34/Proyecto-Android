@@ -36,9 +36,5 @@ abstract class AppModule {
 
     @Binds
     @Singleton
-    abstract fun bindPlaylistRemoteDatasource(ds: PlaylistRemoteDatasourceStrapi): PlaylistRemoteDatasource
-
-    @Binds
-    @Singleton
     abstract fun bindUserDatasourceLocal(ds: UserLocalDatasourceDS): UserLocalDatasource
 }

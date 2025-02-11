@@ -1,11 +1,15 @@
 package com.alaturing.umusicapp.di
 
+import android.content.Context
 import com.alaturing.umusicapp.authentication.data.local.UserLocalDatasource
 import com.alaturing.umusicapp.authentication.data.remote.AuthenticationInterceptor
+import com.alaturing.umusicapp.authentication.data.remote.PlaylistRemoteDatasource
+import com.alaturing.umusicapp.authentication.data.remote.PlaylistRemoteDatasourceStrapi
 import com.alaturing.umusicapp.common.remote.StrapiApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
@@ -69,5 +73,14 @@ class NetworkModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         return  retrofit.create(StrapiApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePlaylistRemoteDatasource(
+        api: StrapiApi,
+        @ApplicationContext context: Context
+    ): PlaylistRemoteDatasource {
+        return PlaylistRemoteDatasourceStrapi(api, context)
     }
 }

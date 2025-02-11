@@ -1,4 +1,3 @@
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -11,7 +10,6 @@ import coil3.request.placeholder
 import com.alaturing.umusicapp.R
 import com.alaturing.umusicapp.databinding.PlaylistSongItemBinding
 import com.alaturing.umusicapp.main.song.model.Song
-import com.alaturing.umusicapp.main.song.ui.SongsAdapter
 
 class PlaylistSongAdapter(
     private val onDeleteClick: (Song) -> Unit,
@@ -40,18 +38,10 @@ class PlaylistSongAdapter(
         fun bind(song: Song) {
             binding.songName.text = song.name
 
-            // Agregar log para debugging
-            Log.d("PlaylistSongAdapter", "Binding song: ${song.name} with ${song.artists.size} artists")
-            song.artists.forEach {
-                Log.d("PlaylistSongAdapter", "Artist for ${song.name}: ${it.name}")
-            }
-
             val artistsNames = song.artists.map { it.name }.joinToString(", ")
             binding.playlistSongAuthor.text = artistsNames
             binding.playlistSongAuthor.isVisible = artistsNames.isNotBlank()
 
-            // Log del texto final
-            Log.d("PlaylistSongAdapter", "Final artist text: $artistsNames")
             binding.songDuration.text = formatDuration(song.duration)
             song.imageUrl?.let {
                 binding.songCover.load(it) {
@@ -60,7 +50,6 @@ class PlaylistSongAdapter(
                 }
             }
 
-            // Controlar la visibilidad del botón de borrar según los permisos
             binding.deleteButton.isVisible = isEditable
             binding.deleteButton.setOnClickListener {
                 onDeleteClick(song)

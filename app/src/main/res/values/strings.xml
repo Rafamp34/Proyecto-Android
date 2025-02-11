@@ -62,5 +62,9 @@
     <string name="remove_song">Eliminar canción</string>
     <string name="remove_song_message">¿Quieres eliminar %1$s de la playlist?</string>
     <string name="remove">Eliminar</string>
+
+    <string name="create_playlist">Crear playlist</string>
+    <string name="create">Crear</string>
     <string name="cancel">Cancelar</string>
+    <string name="playlist_name" />
 </resources>

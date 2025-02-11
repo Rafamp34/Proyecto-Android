@@ -1,5 +1,6 @@
 package com.alaturing.umusicapp.authentication.data.repository
 
+import android.net.Uri
 import com.alaturing.umusicapp.authentication.data.remote.PlaylistRemoteDatasource
 import com.alaturing.umusicapp.main.playlist.model.Playlist
 import com.alaturing.umusicapp.main.song.model.Song
@@ -33,5 +34,13 @@ class PlaylistRepositoryDefault @Inject constructor(
 
     override suspend fun removeSongFromPlaylist(playlistId: Int, songId: Int): Result<Unit> {
         return remote.removeSongFromPlaylist(playlistId, songId)
+    }
+
+    override suspend fun createPlaylist(name: String, author: String, imageId: Int?): Result<Playlist> {
+        return remote.createPlaylist(name, author, imageId)
+    }
+
+    override suspend fun uploadImage(uri: Uri): Result<Int> {
+        return remote.uploadImage(uri)
     }
 }

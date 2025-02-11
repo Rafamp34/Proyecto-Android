@@ -7,5 +7,22 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.alaturing.umusicapp.main.profile.ui.ProfileFragment"
-        android:label="ProfileFragment" />
+        android:label="ProfileFragment">
+
+        <!-- Añade esta acción de navegación -->
+        <action
+            android:id="@+id/action_profileFragment_to_playlistDetailFragment"
+            app:destination="@id/playlistDetailFragment" />
+    </fragment>
+
+    <!-- Añade el fragmento de destino -->
+    <fragment
+        android:id="@+id/playlistDetailFragment"
+        android:name="com.alaturing.umusicapp.main.playlistDetails.PlaylistDetailFragment"
+        android:label="PlaylistDetailFragment">
+        <argument
+            android:name="playlistId"
+            app:argType="integer" />
+    </fragment>
+
 </navigation>
