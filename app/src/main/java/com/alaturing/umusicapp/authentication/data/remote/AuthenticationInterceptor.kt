@@ -1,6 +1,6 @@
 package com.alaturing.umusicapp.authentication.data.remote
 
-import com.alaturing.umusicapp.authentication.data.local.UserLocalDatasource
+import com.alaturing.umusicapp.authentication.data.local.LocalDatasource.UserLocalDatasource
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response

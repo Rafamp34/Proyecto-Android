@@ -1,6 +1,5 @@
-package com.alaturing.incidentify.authentication.data.local
+package com.alaturing.umusicapp.authentication.data.local.LocalDatasource
 
-import com.alaturing.umusicapp.authentication.data.local.UserLocalDatasource
 import com.alaturing.umusicapp.authentication.model.User
 import javax.inject.Inject
 

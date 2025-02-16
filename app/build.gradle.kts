@@ -101,6 +101,13 @@ dependencies {
 
     implementation (libs.okhttp.v491)
     implementation (libs.logging.interceptor.v491)
+
+    // Room
+    val roomVersion = "2.6.1"
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+    implementation (libs.gson)
 }
 
 kapt {

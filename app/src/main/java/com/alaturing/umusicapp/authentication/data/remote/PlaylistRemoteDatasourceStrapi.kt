@@ -3,14 +3,12 @@ package com.alaturing.umusicapp.authentication.data.remote
 import android.content.Context
 import android.net.Uri
 import android.util.Log
-import com.alaturing.umusicapp.authentication.data.remote.model.CreatePlaylistBody
-import com.alaturing.umusicapp.authentication.data.remote.model.CreatePlaylistData
-import com.alaturing.umusicapp.authentication.data.remote.model.ImageReference
-import com.alaturing.umusicapp.authentication.data.remote.model.toModel
-import com.alaturing.umusicapp.authentication.data.remote.model.toSong
+import com.alaturing.umusicapp.authentication.data.remote.model.*
 import com.alaturing.umusicapp.common.remote.PlaylistUpdateBody
 import com.alaturing.umusicapp.common.remote.PlaylistUpdateData
 import com.alaturing.umusicapp.common.remote.StrapiApi
+import com.alaturing.umusicapp.common.utils.formatDuration
+import com.alaturing.umusicapp.common.utils.parseDuration
 import com.alaturing.umusicapp.main.playlist.model.Playlist
 import com.alaturing.umusicapp.main.song.model.Song
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -25,6 +23,10 @@ class PlaylistRemoteDatasourceStrapi @Inject constructor(
     @ApplicationContext private val context: Context
 ) : PlaylistRemoteDatasource {
     data class ImageData(val id: Int)
+
+    private fun calculateTotalDuration(songs: List<Song>): Int {
+        return songs.sumOf { it.duration }
+    }
 
     override suspend fun getAll(): Result<List<Playlist>> {
         return try {
@@ -69,31 +71,6 @@ class PlaylistRemoteDatasourceStrapi @Inject constructor(
         }
     }
 
-    override suspend fun removeSongFromPlaylist(playlistId: Int, songId: Int): Result<Unit> {
-        return try {
-            val playlistResult = getById(playlistId)
-            if (playlistResult.isFailure) {
-                return Result.failure(playlistResult.exceptionOrNull() ?: RuntimeException())
-            }
-
-            val currentPlaylist = playlistResult.getOrNull()!!
-            val updatedSongIds = currentPlaylist.songs.map { it.id }.filter { it != songId }
-
-            val response = api.updatePlaylist(
-                playlistId,
-                PlaylistUpdateBody(PlaylistUpdateData(updatedSongIds))
-            )
-
-            if (response.isSuccessful) {
-                Result.success(Unit)
-            } else {
-                Result.failure(RuntimeException("Error removing song: ${response.code()}"))
-            }
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
     override suspend fun addSongToPlaylist(playlistId: Int, songId: Int): Result<Unit> {
         return try {
             val playlistResult = getById(playlistId)
@@ -102,12 +79,36 @@ class PlaylistRemoteDatasourceStrapi @Inject constructor(
             }
 
             val currentPlaylist = playlistResult.getOrNull()!!
-            val updatedSongIds = currentPlaylist.songs.map { it.id } + songId
+            val songResponse = api.getSongById(songId)
+            if (!songResponse.isSuccessful || songResponse.body() == null) {
+                return Result.failure(RuntimeException("Error getting song: ${songResponse.code()}"))
+            }
+
+            val newSong = songResponse.body()!!.data.toSong()
+            val updatedSongs = currentPlaylist.songs + newSong
+
+            // Calcular la nueva duración (sumar la duración de la nueva canción)
+            val newDuration = currentPlaylist.duration + newSong.duration
+
+            // Formatear la duración como "mm:ss"
+            val newDurationFormatted = formatDuration(newDuration)
+
+            // Log para depuración
+            Log.d("PlaylistRemoteDatasource", "Updated songs: ${updatedSongs.map { it.id }}")
+            Log.d("PlaylistRemoteDatasource", "New duration: $newDurationFormatted")
 
             val response = api.updatePlaylist(
                 playlistId,
-                PlaylistUpdateBody(PlaylistUpdateData(updatedSongIds))
+                PlaylistUpdateBody(
+                    PlaylistUpdateData(
+                        song_IDS = updatedSongs.map { it.id },
+                        duration = newDurationFormatted  // Enviar la duración como String
+                    )
+                )
             )
+
+            // Log para depuración
+            Log.d("PlaylistRemoteDatasource", "Response: ${response.isSuccessful}, Code: ${response.code()}")
 
             if (response.isSuccessful) {
                 Result.success(Unit)
@@ -119,6 +120,48 @@ class PlaylistRemoteDatasourceStrapi @Inject constructor(
         }
     }
 
+    override suspend fun removeSongFromPlaylist(playlistId: Int, songId: Int): Result<Unit> {
+        return try {
+            val playlistResult = getById(playlistId)
+            if (playlistResult.isFailure) {
+                return Result.failure(playlistResult.exceptionOrNull() ?: RuntimeException())
+            }
+
+            val currentPlaylist = playlistResult.getOrNull()!!
+            val updatedSongs = currentPlaylist.songs.filter { it.id != songId }
+
+            // Recalcular la duración total de la playlist
+            val newDuration = calculateTotalDuration(updatedSongs)
+
+            // Formatear la duración como "mm:ss"
+            val newDurationFormatted = formatDuration(newDuration)
+
+            // Log para depuración
+            Log.d("PlaylistRemoteDatasource", "Updated songs: ${updatedSongs.map { it.id }}")
+            Log.d("PlaylistRemoteDatasource", "New duration: $newDurationFormatted")
+
+            val response = api.updatePlaylist(
+                playlistId,
+                PlaylistUpdateBody(
+                    PlaylistUpdateData(
+                        song_IDS = updatedSongs.map { it.id },
+                        duration = newDurationFormatted  // Enviar la duración como String
+                    )
+                )
+            )
+
+            // Log para depuración
+            Log.d("PlaylistRemoteDatasource", "Response: ${response.isSuccessful}, Code: ${response.code()}")
+
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                Result.failure(RuntimeException("Error removing song: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 
     override suspend fun createPlaylist(name: String, author: String, imageId: Int?): Result<Playlist> {
         try {
@@ -127,8 +170,8 @@ class PlaylistRemoteDatasourceStrapi @Inject constructor(
                     data = CreatePlaylistData(
                         name = name,
                         author = author,
-                        duration = "0",
-                        image = imageId?.let { ImageReference(listOf(it)) }
+                        duration = "0:00",  // Formato inicial en mm:ss
+                        image = imageId
                     )
                 )
             )
@@ -143,10 +186,8 @@ class PlaylistRemoteDatasourceStrapi @Inject constructor(
         }
     }
 
-
     override suspend fun uploadImage(uri: Uri): Result<Int> {
         try {
-            // Convertir Uri a File y MultipartBody.Part
             val file = getFileFromUri(uri, context)
             val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
             val body = MultipartBody.Part.createFormData("files", file.name, requestFile)

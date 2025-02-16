@@ -57,7 +57,8 @@ class ProfileViewModel @Inject constructor(
 
     fun createPlaylist(name: String, author: String) {
         viewModelScope.launch {
-            playlistRepository.createPlaylist(name, author).onSuccess {
+            // Pasar null como imageId
+            playlistRepository.createPlaylist(name, author, null).onSuccess {
                 loadUserPlaylists(author)
             }
         }
@@ -82,7 +83,7 @@ class ProfileViewModel @Inject constructor(
                 }
             } ?: run {
                 // Crear playlist sin imagen
-                playlistRepository.createPlaylist(name, author).onSuccess {
+                playlistRepository.createPlaylist(name, author, null).onSuccess {
                     loadUserPlaylists(author)
                 }
             }

@@ -21,7 +21,7 @@ class PlaylistsAdapter(
 
             binding.playlistTitle.text = playlist.name
             binding.playlistAuthor.text = playlist.author
-            binding.playlistDuration.text = formatDuration(playlist.duration.toIntOrNull() ?: 0)
+            binding.playlistDuration.text = formatDuration(playlist.duration ?: 0)
             playlist.imageUrl?.let { binding.playlistCover.load(it) }
         }
 

@@ -27,7 +27,8 @@ data class PlaylistUpdateBody(
 )
 
 data class PlaylistUpdateData(
-    val song_IDS: List<Int>
+    val song_IDS: List<Int>,
+    val duration: String
 )
 
 /**

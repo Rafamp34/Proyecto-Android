@@ -16,7 +16,7 @@ data class PlaylistDetailModel(
     val id: Int,
     val name: String,
     val author: String,
-    val duration: String,
+    val duration: Int,
     val imageUrl: String?,
     val isEditable: Boolean
 )

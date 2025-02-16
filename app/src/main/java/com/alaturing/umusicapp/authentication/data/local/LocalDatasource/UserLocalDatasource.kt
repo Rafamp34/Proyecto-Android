@@ -1,4 +1,4 @@
-package com.alaturing.umusicapp.authentication.data.local
+package com.alaturing.umusicapp.authentication.data.local.LocalDatasource
 
 import com.alaturing.umusicapp.authentication.model.User
 

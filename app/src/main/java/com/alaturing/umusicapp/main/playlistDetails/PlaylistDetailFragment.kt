@@ -20,6 +20,7 @@ import coil3.load
 import coil3.request.crossfade
 import coil3.request.placeholder
 import com.alaturing.umusicapp.R
+import com.alaturing.umusicapp.common.utils.formatDuration
 import com.alaturing.umusicapp.databinding.FragmentPlaylistDetailBinding
 import com.alaturing.umusicapp.main.song.model.Song
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -159,7 +160,7 @@ class PlaylistDetailFragment : Fragment() {
                             with(state.playlist) {
                                 binding.playlistTitle.text = name
                                 binding.playlistAuthor.text = author
-                                binding.playlistDuration.text = duration
+                                binding.playlistDuration.text = formatDuration(duration)
                                 imageUrl?.let { binding.playlistImage.load(it) }
                                 binding.addSongButton.isVisible = isEditable
 

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.alaturing.umusicapp.authentication.data.repository.PlaylistRepository
 import com.alaturing.umusicapp.authentication.data.repository.SongRepository
 import com.alaturing.umusicapp.authentication.data.repository.UserRepository
+import com.alaturing.umusicapp.common.utils.formatDuration
 import com.alaturing.umusicapp.main.playlist.model.Playlist
 import com.alaturing.umusicapp.main.song.model.Song
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -46,7 +47,7 @@ class PlaylistDetailViewModel @Inject constructor(
                             id = playlist.id,
                             name = playlist.name,
                             author = playlist.author,
-                            duration = playlist.duration.toString(),
+                            duration = playlist.duration, // Mantener como Int
                             imageUrl = playlist.imageUrl,
                             isEditable = playlist.author == user.userName
                         ),
