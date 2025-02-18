@@ -204,6 +204,23 @@ class PlaylistRemoteDatasourceStrapi @Inject constructor(
         }
     }
 
+    override suspend fun deletePlaylist(id: Int): Result<Unit> {
+        return try {
+            val response = api.deletePlaylist(id)
+
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                Log.e("PlaylistRemoteDS", "Error deleting playlist: ${response.code()}")
+                Log.e("PlaylistRemoteDS", "Error body: ${response.errorBody()?.string()}")
+                Result.failure(RuntimeException("Error deleting playlist: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Log.e("PlaylistRemoteDS", "Exception deleting playlist", e)
+            Result.failure(e)
+        }
+    }
+
     private fun getFileFromUri(uri: Uri, context: Context): File {
         val inputStream = context.contentResolver.openInputStream(uri)
         val file = File.createTempFile("upload", null, context.cacheDir)

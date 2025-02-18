@@ -90,4 +90,19 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    fun deletePlaylist(playlist: Playlist) {
+        viewModelScope.launch {
+            try {
+                playlistRepository.deletePlaylist(playlist.id).onSuccess {
+                    // La playlist se eliminó exitosamente, cargar las playlists actualizadas
+                    (uiState.value as? ProfileUiState.Success)?.let { state ->
+                        loadUserPlaylists(state.user.userName)
+                    }
+                }
+            } catch (e: Exception) {
+                // Manejar el error si es necesario
+            }
+        }
+    }
+
 }

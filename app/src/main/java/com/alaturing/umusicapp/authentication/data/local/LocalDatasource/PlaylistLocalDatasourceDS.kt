@@ -54,4 +54,17 @@ class PlaylistLocalDatasourceDS @Inject constructor(
             // También podríamos buscar y eliminar todas las claves que empiecen con "playlist_songs_"
         }
     }
+
+    suspend fun deletePlaylist(id: Int) {
+        val songKey = stringPreferencesKey("playlist_songs_$id")
+
+        val currentPlaylists = getPlaylists().filterNot { it.id == id }
+
+        preferences.edit { prefs ->
+            prefs.remove(songKey)
+
+            val playlistsJson = gson.toJson(currentPlaylists)
+            prefs[playlistsKey] = playlistsJson
+        }
+    }
 }

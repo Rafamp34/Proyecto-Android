@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.PopupMenu
+import com.google.android.gms.maps.OnMapReadyCallback
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -26,19 +28,27 @@ import com.alaturing.umusicapp.authentication.ui.AuthenticationActivity
 import com.alaturing.umusicapp.databinding.DialogCreatePlaylistBinding
 import com.alaturing.umusicapp.databinding.FragmentProfileBinding
 import com.alaturing.umusicapp.main.playlist.PlaylistsAdapter
+import com.alaturing.umusicapp.main.playlist.model.Playlist
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.io.File
 
 @AndroidEntryPoint
-class ProfileFragment : Fragment() {
+class ProfileFragment : Fragment(), OnMapReadyCallback {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     private val viewModel: ProfileViewModel by viewModels()
     private lateinit var playlistsAdapter: PlaylistsAdapter
     private var selectedImageUri: Uri? = null
     private var photoUri: Uri? = null
+    private var map: GoogleMap? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,26 +62,82 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         setupRecyclerView()
-        setupCreatePlaylistButton()
+        setupOptionsButton()
         observeUiState()
         observeUserPlaylists()
     }
 
     private fun setupRecyclerView() {
-        playlistsAdapter = PlaylistsAdapter { playlist ->
-            findNavController().navigate(
-                R.id.playlistDetailFragment,
-                Bundle().apply {
-                    putInt("playlistId", playlist.id)
-                }
-            )
-        }
+        playlistsAdapter = PlaylistsAdapter(
+            onPlaylistClick = { playlist ->
+                findNavController().navigate(
+                    R.id.playlistDetailFragment,
+                    Bundle().apply {
+                        putInt("playlistId", playlist.id)
+                    }
+                )
+            },
+            onDeleteClick = { playlist ->
+                showDeletePlaylistDialog(playlist)
+            }
+        )
         binding.userPlaylistsRecyclerView.adapter = playlistsAdapter
     }
 
-    private fun setupCreatePlaylistButton() {
-        binding.createPlaylistButton.setOnClickListener {
-            showCreatePlaylistDialog()
+    private fun setupOptionsButton() {
+        binding.optionsButton.setOnClickListener { view ->
+            showOptionsMenu(view)
+        }
+    }
+
+    private fun showOptionsMenu(view: View) {
+        val popup = PopupMenu(requireContext(), view)
+        popup.menuInflater.inflate(R.menu.profile_options_menu, popup.menu)
+
+        popup.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.action_add_playlist -> {
+                    showCreatePlaylistDialog()
+                    true
+                }
+                R.id.action_show_map -> {
+                    showMapBottomSheet()
+                    true
+                }
+                else -> false
+            }
+        }
+
+        popup.show()
+    }
+
+    private fun showMapBottomSheet() {
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        val bottomSheetView = layoutInflater.inflate(R.layout.bottom_sheet_map, null)
+        bottomSheetDialog.setContentView(bottomSheetView)
+
+        // Inicializar el mapa en el bottom sheet
+        val mapFragment = childFragmentManager.findFragmentById(R.id.mapView) as? SupportMapFragment
+        mapFragment?.getMapAsync(this)
+
+        bottomSheetDialog.show()
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        map = googleMap
+
+        // Configurar el mapa
+        map?.apply {
+            uiSettings.apply {
+                isZoomControlsEnabled = true
+                isZoomGesturesEnabled = true
+                isScrollGesturesEnabled = true
+            }
+
+            // Mostrar una ubicación por defecto (por ejemplo, Madrid)
+            val defaultLocation = LatLng(40.416775, -3.703790)
+            addMarker(MarkerOptions().position(defaultLocation).title("Mi ubicación"))
+            moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 15f))
         }
     }
 
@@ -125,6 +191,17 @@ class ProfileFragment : Fragment() {
         }
 
         dialog.show()
+    }
+
+    private fun showDeletePlaylistDialog(playlist: Playlist) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.delete_playlist)
+            .setMessage(getString(R.string.delete_playlist_message, playlist.name))
+            .setPositiveButton(R.string.delete) { _, _ ->
+                viewModel.deletePlaylist(playlist)
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
     }
 
     private fun requestCameraPermissionAndTakePhoto() {
@@ -239,8 +316,6 @@ class ProfileFragment : Fragment() {
                             startActivity(intent)
                             requireActivity().finish()
                         }
-
-                        else -> {}
                     }
                 }
             }

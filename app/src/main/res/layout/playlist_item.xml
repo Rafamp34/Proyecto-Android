@@ -33,7 +33,7 @@
             android:maxLines="1"
             android:textColor="@color/white"
             android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/deleteButton"
             app:layout_constraintStart_toEndOf="@id/playlistCover"
             app:layout_constraintTop_toTopOf="@id/playlistCover"
             tools:text="Mix diario 1"/>
@@ -63,6 +63,16 @@
             app:layout_constraintStart_toStartOf="@id/playlistTitle"
             app:layout_constraintTop_toBottomOf="@id/playlistAuthor"
             tools:text="2h 30min"/>
+
+        <ImageButton
+            android:id="@+id/deleteButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_delete"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

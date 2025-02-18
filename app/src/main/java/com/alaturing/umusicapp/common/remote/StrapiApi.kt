@@ -87,6 +87,11 @@ interface StrapiPlaylistApi {
 
     @POST("/api/playlists")
     suspend fun createPlaylist(@Body body: CreatePlaylistBody): Response<PlaylistResponseBody>
+
+    @DELETE("/api/playlists/{id}")
+    suspend fun deletePlaylist(
+        @Path("id") id: Int
+    ): Response<Unit>
 }
 
 

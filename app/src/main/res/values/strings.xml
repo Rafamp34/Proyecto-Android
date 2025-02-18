@@ -67,4 +67,7 @@
     <string name="create">Crear</string>
     <string name="cancel">Cancelar</string>
     <string name="playlist_name" />
+    <string name="delete_playlist">Eliminar playlist</string>
+    <string name="delete_playlist_message">¿Estás seguro de que quieres eliminar la playlist \'%1$s\'?</string>
+    <string name="delete">Eliminar</string>
 </resources>

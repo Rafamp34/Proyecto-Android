@@ -2,6 +2,7 @@ package com.alaturing.umusicapp.main.playlist
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -10,7 +11,8 @@ import com.alaturing.umusicapp.databinding.PlaylistItemBinding
 import com.alaturing.umusicapp.main.playlist.model.Playlist
 
 class PlaylistsAdapter(
-    private val onPlaylistClick: (Playlist) -> Unit
+    private val onPlaylistClick: (Playlist) -> Unit,
+    private val onDeleteClick: ((Playlist) -> Unit)? = null
 ) : ListAdapter<Playlist, PlaylistsAdapter.PlaylistViewHolder>(PlaylistDiffCallback) {
 
     inner class PlaylistViewHolder(
@@ -23,6 +25,12 @@ class PlaylistsAdapter(
             binding.playlistAuthor.text = playlist.author
             binding.playlistDuration.text = formatDuration(playlist.duration ?: 0)
             playlist.imageUrl?.let { binding.playlistCover.load(it) }
+
+            // Configurar el botón de eliminar
+            binding.deleteButton.apply {
+                isVisible = onDeleteClick != null
+                setOnClickListener { onDeleteClick?.invoke(playlist) }
+            }
         }
 
         private fun formatDuration(seconds: Int): String {

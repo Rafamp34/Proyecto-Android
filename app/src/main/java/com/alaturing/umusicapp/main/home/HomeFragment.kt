@@ -59,15 +59,18 @@ class HomeFragment : Fragment() {
 
     private fun setupRecyclerViews() {
         // Setup Playlists Grid
-        playlistsAdapter = PlaylistsAdapter { playlist ->
-            // Navegar al detalle de la playlist
-            findNavController().navigate(
-                R.id.playlistDetailFragment,
-                Bundle().apply {
-                    putInt("playlistId", playlist.id)
-                }
-            )
-        }
+        playlistsAdapter = PlaylistsAdapter(
+            onPlaylistClick = { playlist ->
+                // Navegar al detalle de la playlist
+                findNavController().navigate(
+                    R.id.playlistDetailFragment,
+                    Bundle().apply {
+                        putInt("playlistId", playlist.id)
+                    }
+                )
+            },
+            onDeleteClick = null  // No permitimos eliminar playlists desde la pantalla principal
+        )
         binding.playlistsGrid.adapter = playlistsAdapter
 
         // Setup Songs List

@@ -47,14 +47,12 @@ class PlaylistRepositoryDefault @Inject constructor(
                 val result = remote.getById(id)
                 if (result.isSuccess) {
                     val playlist = result.getOrNull()!!
-                    // Guardar las canciones específicas de esta playlist
                     local.savePlaylistSongs(playlist.id, playlist.songs)
                     Result.success(playlist)
                 } else {
                     val playlists = local.getPlaylists()
                     val playlist = playlists.find { it.id == id }
                     if (playlist != null) {
-                        // Recuperar las canciones guardadas
                         val songs = local.getPlaylistSongs(id)
                         Result.success(playlist.copy(songs = songs))
                     } else {
@@ -128,5 +126,24 @@ class PlaylistRepositoryDefault @Inject constructor(
 
     override suspend fun uploadImage(uri: Uri): Result<Int> {
         return remote.uploadImage(uri)
+    }
+
+    override suspend fun deletePlaylist(id: Int): Result<Unit> {
+        return try {
+            if (networkUtils.isNetworkAvailable()) {
+                val result = remote.deletePlaylist(id)
+                if (result.isSuccess) {
+                    // Si la eliminación fue exitosa en el servidor, eliminar también localmente
+                    local.deletePlaylist(id)
+                    Result.success(Unit)
+                } else {
+                    result // Propagar el error del remoto
+                }
+            } else {
+                Result.failure(Exception("No hay conexión a internet"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }

@@ -14,4 +14,6 @@ interface PlaylistRepository {
     suspend fun removeSongFromPlaylist(playlistId: Int, songId: Int): Result<Unit>
     suspend fun createPlaylist(name: String, author: String, imageId: Int?): Result<Playlist>
     suspend fun uploadImage(uri: Uri): Result<Int>
+    suspend fun deletePlaylist(id: Int): Result<Unit>
+
 }

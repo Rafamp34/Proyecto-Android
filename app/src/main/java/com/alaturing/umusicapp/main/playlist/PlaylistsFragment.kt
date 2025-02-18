@@ -40,11 +40,13 @@ class PlaylistsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapter = PlaylistsAdapter { playlist ->
-            // Navegar al detalle de la playlist
-            val action = PlaylistsFragmentDirections.actionPlaylistsFragmentToPlaylistDetailFragment(playlist.id)
-            findNavController().navigate(action)
-        }
+        adapter = PlaylistsAdapter(
+            onPlaylistClick = { playlist ->
+                val action = PlaylistsFragmentDirections.actionPlaylistsFragmentToPlaylistDetailFragment(playlist.id)
+                findNavController().navigate(action)
+            },
+            onDeleteClick = null
+        )
         binding.playlistsRv.adapter = adapter
     }
 

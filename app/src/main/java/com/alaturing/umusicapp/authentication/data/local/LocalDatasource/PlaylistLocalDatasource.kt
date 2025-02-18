@@ -60,5 +60,8 @@ class PlaylistLocalDatasource @Inject constructor(
         playlistDao.insertPlaylistSongCrossRefs(playlistSongCrossRefs)
     }
 
+    suspend fun deletePlaylist(playlistId: Int) {
+        playlistDao.deletePlaylistById(playlistId)
+    }
 
 }

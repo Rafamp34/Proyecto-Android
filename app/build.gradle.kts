@@ -79,6 +79,8 @@ dependencies {
     implementation(libs.camera.view)
     implementation(libs.androidx.ui.test.android)
     implementation(libs.firebase.appdistribution.gradle)
+    implementation(libs.androidx.room.common)
+    implementation(libs.play.services.maps)
     kapt(libs.hilt.android.compiler)
 
     // Navigation components
@@ -108,6 +110,7 @@ dependencies {
     kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation (libs.gson)
+
 }
 
 kapt {
