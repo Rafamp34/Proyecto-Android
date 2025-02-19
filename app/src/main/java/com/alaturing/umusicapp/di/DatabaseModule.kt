@@ -1,13 +1,19 @@
 package com.alaturing.umusicapp.di
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStoreFile
 import com.alaturing.umusicapp.authentication.data.local.AppDatabase
-import com.alaturing.umusicapp.authentication.data.local.LocalDatasource.PlaylistLocalDatasource
-import com.alaturing.umusicapp.authentication.data.local.LocalDatasource.SongLocalDatasource
+import com.alaturing.umusicapp.authentication.data.local.LocalDatasource.PlaylistLocalDatasourceDS
+import com.alaturing.umusicapp.authentication.data.local.LocalDatasource.SongLocalDatasourceDS
+import com.alaturing.umusicapp.authentication.data.local.LocalDatasource.UserLocalDatasourceDS
 import com.alaturing.umusicapp.authentication.data.local.daos.ArtistDao
 import com.alaturing.umusicapp.authentication.data.local.daos.PlaylistDao
 import com.alaturing.umusicapp.authentication.data.local.daos.SongDao
 import com.alaturing.umusicapp.authentication.data.local.daos.UserDao
+import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,54 +27,43 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
-        return AppDatabase.getInstance(context)
-    }
-
-    @Provides
-    @Singleton
-    fun provideUserDao(appDatabase: AppDatabase): UserDao {
-        return appDatabase.userDao()
-    }
-
-    @Provides
-    @Singleton
-    fun provideSongDao(appDatabase: AppDatabase): SongDao {
-        return appDatabase.songDao()
-    }
-
-    @Provides
-    @Singleton
-    fun provideArtistDao(appDatabase: AppDatabase): ArtistDao {
-        return appDatabase.artistDao()
-    }
-
-    @Provides
-    @Singleton
-    fun providePlaylistDao(appDatabase: AppDatabase): PlaylistDao {
-        return appDatabase.playlistDao()
-    }
+    fun provideUserLocalDatasource(
+        preferences: DataStore<Preferences>
+    ) = UserLocalDatasourceDS(preferences)
 
     @Provides
     @Singleton
     fun provideSongLocalDatasource(
-        songDao: SongDao,
-        artistDao: ArtistDao
-    ): SongLocalDatasource {
-        return SongLocalDatasource(songDao, artistDao)
-    }
+        preferences: DataStore<Preferences>,
+        gson: Gson
+    ) = SongLocalDatasourceDS(preferences, gson)
 
     @Provides
     @Singleton
     fun providePlaylistLocalDatasource(
-        playlistDao: PlaylistDao
-    ): PlaylistLocalDatasource {
-        return PlaylistLocalDatasource(playlistDao)
-    }
+        preferences: DataStore<Preferences>,
+        gson: Gson
+    ) = PlaylistLocalDatasourceDS(preferences, gson)
+
+    // Room providers
+    @Provides
+    @Singleton
+    fun provideAppDatabase(@ApplicationContext context: Context) =
+        AppDatabase.getInstance(context)
 
     @Provides
     @Singleton
-    fun provideNetworkUtils(@ApplicationContext context: Context): NetworkUtils {
-        return NetworkUtils(context)
-    }
+    fun provideUserDao(appDatabase: AppDatabase) = appDatabase.userDao()
+
+    @Provides
+    @Singleton
+    fun provideSongDao(appDatabase: AppDatabase) = appDatabase.songDao()
+
+    @Provides
+    @Singleton
+    fun provideArtistDao(appDatabase: AppDatabase) = appDatabase.artistDao()
+
+    @Provides
+    @Singleton
+    fun providePlaylistDao(appDatabase: AppDatabase) = appDatabase.playlistDao()
 }

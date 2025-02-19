@@ -3,44 +3,41 @@ package com.alaturing.umusicapp.authentication.data.repository
 import com.alaturing.umusicapp.authentication.model.User
 import com.alaturing.umusicapp.authentication.data.local.LocalDatasource.UserLocalDatasource
 import com.alaturing.umusicapp.authentication.data.remote.UserRemoteDatasource
-import com.alaturing.umusicapp.di.NetworkUtils
 import javax.inject.Inject
 
 class UserRepositoryDefault @Inject constructor(
     private val remote: UserRemoteDatasource,
-    private val local: UserLocalDatasource,
-    private val networkUtils: NetworkUtils
+    private val local: UserLocalDatasource
 ) : UserRepository {
 
     override suspend fun login(identifier: String, password: String): Result<User> {
-        return try {
-            if (networkUtils.isNetworkAvailable()) {
-                val result = remote.login(identifier, password)
-                if (result.isSuccess) {
-                    result.getOrNull()?.let { user ->
-                        local.saveUser(user)
-                    }
-                }
-                result
-            } else {
-                // Si no hay conexión, intentar usar el usuario guardado localmente
-                val localUser = local.retrieveUser()
-                if (localUser != null) {
-                    Result.success(localUser)
-                } else {
-                    Result.failure(Exception("No hay conexión a internet y no hay usuario guardado"))
-                }
+        try {
+            val remoteResult = remote.login(identifier, password)
+            if (remoteResult.isSuccess) {
+                val user = remoteResult.getOrNull()!!
+                local.saveUser(user)
+                return Result.success(user)
             }
         } catch (e: Exception) {
-            Result.failure(e)
+            val localUser = local.retrieveUser()
+            if (localUser != null) {
+                return Result.success(localUser)
+            }
         }
+
+        return Result.failure(Exception("No se pudo iniciar sesión"))
     }
 
     override suspend fun register(user: String, email: String, password: String): Result<User> {
-        return if (networkUtils.isNetworkAvailable()) {
-            remote.register(user, email, password)
-        } else {
-            Result.failure(Exception("Se requiere conexión a internet para registrarse"))
+        return try {
+            val result = remote.register(user, email, password)
+            if (result.isSuccess) {
+                val newUser = result.getOrNull()!!
+                local.saveUser(newUser)
+            }
+            result
+        } catch (e: Exception) {
+            Result.failure(Exception("No se pudo registrar el usuario"))
         }
     }
 
@@ -49,38 +46,23 @@ class UserRepositoryDefault @Inject constructor(
     }
 
     override suspend fun getProfile(): Result<User> {
-        return try {
-            // Primero intentamos obtener el perfil guardado localmente
-            val localUser = local.retrieveUser()
+        val localUser = local.retrieveUser()
 
-            if (networkUtils.isNetworkAvailable()) {
-                // Si hay conexión, actualizamos con datos remotos
-                val remoteResult = remote.getProfile()
-                if (remoteResult.isSuccess) {
-                    val user = remoteResult.getOrNull()!!
-                    // Preservamos el token del usuario local
-                    val userWithToken = user.copy(token = localUser?.token)
-                    local.saveUser(userWithToken)
-                    Result.success(userWithToken)
-                } else if (localUser != null) {
-                    // Si falla la actualización pero tenemos datos locales, los usamos
-                    Result.success(localUser)
-                } else {
-                    remoteResult
-                }
-            } else if (localUser != null) {
-                // Si no hay conexión pero tenemos datos locales, los usamos
-                Result.success(localUser)
-            } else {
-                Result.failure(Exception("No hay conexión y no hay datos guardados"))
+        try {
+            val remoteResult = remote.getProfile()
+            if (remoteResult.isSuccess) {
+                val user = remoteResult.getOrNull()!!
+                val userWithToken = user.copy(token = localUser?.token)
+                local.saveUser(userWithToken)
+                return Result.success(userWithToken)
             }
         } catch (e: Exception) {
-            val localUser = local.retrieveUser()
-            if (localUser != null) {
-                Result.success(localUser)
-            } else {
-                Result.failure(e)
-            }
+        }
+
+        return if (localUser != null) {
+            Result.success(localUser)
+        } else {
+            Result.failure(Exception("No se pudo obtener el perfil"))
         }
     }
 }
