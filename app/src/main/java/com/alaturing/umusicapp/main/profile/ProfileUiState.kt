@@ -1,4 +1,4 @@
-package com.alaturing.umusicapp.main.profile.ui
+package com.alaturing.umusicapp.main.profile
 
 import com.alaturing.umusicapp.authentication.model.User
 

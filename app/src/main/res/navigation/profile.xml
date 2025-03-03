@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.alaturing.umusicapp.main.profile.ui.ProfileFragment"
+        android:name="com.alaturing.umusicapp.main.profile.ProfileFragment"
         android:label="ProfileFragment">
 
         <!-- Añade esta acción de navegación -->

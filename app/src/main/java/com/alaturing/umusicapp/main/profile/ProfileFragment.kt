@@ -1,20 +1,14 @@
-package com.alaturing.umusicapp.main.profile.ui
+package com.alaturing.umusicapp.main.profile
 
-import android.Manifest
 import android.app.AlertDialog
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.PopupMenu
-import com.google.android.gms.maps.OnMapReadyCallback
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
+import android.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -25,30 +19,27 @@ import androidx.navigation.fragment.findNavController
 import coil3.load
 import com.alaturing.umusicapp.R
 import com.alaturing.umusicapp.authentication.ui.AuthenticationActivity
+import com.alaturing.umusicapp.common.utils.CameraComponents
+import com.alaturing.umusicapp.common.utils.MapComponents
 import com.alaturing.umusicapp.databinding.DialogCreatePlaylistBinding
 import com.alaturing.umusicapp.databinding.FragmentProfileBinding
 import com.alaturing.umusicapp.main.playlist.PlaylistsAdapter
 import com.alaturing.umusicapp.main.playlist.model.Playlist
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.io.File
 
 @AndroidEntryPoint
-class ProfileFragment : Fragment(), OnMapReadyCallback {
+class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     private val viewModel: ProfileViewModel by viewModels()
     private lateinit var playlistsAdapter: PlaylistsAdapter
     private var selectedImageUri: Uri? = null
-    private var photoUri: Uri? = null
-    private var map: GoogleMap? = null
+
+    // Componentes
+    private lateinit var cameraComponents: CameraComponents
+    private lateinit var mapComponents: MapComponents
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,11 +51,26 @@ class ProfileFragment : Fragment(), OnMapReadyCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Inicializar componentes
+        initializeComponents()
+
         setupToolbar()
         setupRecyclerView()
         setupOptionsButton()
         observeUiState()
         observeUserPlaylists()
+    }
+
+    private fun initializeComponents() {
+        // Inicializar componente de cámara
+        cameraComponents = CameraComponents(this)
+        cameraComponents.setOnImageSelectedListener { uri ->
+            handleImageSelection(uri)
+        }
+
+        // Inicializar componente de mapa
+        mapComponents = MapComponents(this)
     }
 
     private fun setupRecyclerView() {
@@ -101,7 +107,8 @@ class ProfileFragment : Fragment(), OnMapReadyCallback {
                     true
                 }
                 R.id.action_show_map -> {
-                    showMapBottomSheet()
+                    // Usar el componente de mapa para mostrar la ubicación del usuario
+                    mapComponents.showMapBottomSheet()
                     true
                 }
                 else -> false
@@ -109,54 +116,6 @@ class ProfileFragment : Fragment(), OnMapReadyCallback {
         }
 
         popup.show()
-    }
-
-    private fun showMapBottomSheet() {
-        val bottomSheetDialog = BottomSheetDialog(requireContext())
-        val bottomSheetView = layoutInflater.inflate(R.layout.bottom_sheet_map, null)
-        bottomSheetDialog.setContentView(bottomSheetView)
-
-        // Inicializar el mapa en el bottom sheet
-        val mapFragment = childFragmentManager.findFragmentById(R.id.mapView) as? SupportMapFragment
-        mapFragment?.getMapAsync(this)
-
-        bottomSheetDialog.show()
-    }
-
-    override fun onMapReady(googleMap: GoogleMap) {
-        map = googleMap
-
-        // Configurar el mapa
-        map?.apply {
-            uiSettings.apply {
-                isZoomControlsEnabled = true
-                isZoomGesturesEnabled = true
-                isScrollGesturesEnabled = true
-            }
-
-            // Mostrar una ubicación por defecto (por ejemplo, Madrid)
-            val defaultLocation = LatLng(40.416775, -3.703790)
-            addMarker(MarkerOptions().position(defaultLocation).title("Mi ubicación"))
-            moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 15f))
-        }
-    }
-
-    private val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        uri?.let { handleImageSelection(it) }
-    }
-
-    private val takePhoto = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-        if (success) {
-            photoUri?.let { handleImageSelection(it) }
-        }
-    }
-
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-            takeNewPhoto()
-        }
     }
 
     private lateinit var dialogBinding: DialogCreatePlaylistBinding
@@ -183,11 +142,13 @@ class ProfileFragment : Fragment(), OnMapReadyCallback {
         }
 
         dialogBinding.selectImageButton.setOnClickListener {
-            pickImage.launch("image/*")
+            // Usar el componente de cámara para seleccionar imagen
+            cameraComponents.selectImageFromGallery()
         }
 
         dialogBinding.takePhotoButton.setOnClickListener {
-            requestCameraPermissionAndTakePhoto()
+            // Usar el componente de cámara para tomar foto
+            cameraComponents.requestCameraPermissionAndTakePhoto()
         }
 
         dialog.show()
@@ -202,48 +163,6 @@ class ProfileFragment : Fragment(), OnMapReadyCallback {
             }
             .setNegativeButton(R.string.cancel, null)
             .show()
-    }
-
-    private fun requestCameraPermissionAndTakePhoto() {
-        when {
-            ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                takeNewPhoto()
-            }
-            shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) -> {
-                showCameraPermissionRationale()
-            }
-            else -> {
-                requestPermissionLauncher.launch(Manifest.permission.CAMERA)
-            }
-        }
-    }
-
-    private fun showCameraPermissionRationale() {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Permiso de cámara necesario")
-            .setMessage("Se necesita acceso a la cámara para tomar fotos")
-            .setPositiveButton("Conceder") { _, _ ->
-                requestPermissionLauncher.launch(Manifest.permission.CAMERA)
-            }
-            .setNegativeButton("Cancelar", null)
-            .show()
-    }
-
-    private fun takeNewPhoto() {
-        val photoFile = File.createTempFile(
-            "IMG_",
-            ".jpg",
-            requireContext().cacheDir
-        )
-        photoUri = FileProvider.getUriForFile(
-            requireContext(),
-            "${requireContext().packageName}.provider",
-            photoFile
-        )
-        takePhoto.launch(photoUri)
     }
 
     private fun handleImageSelection(uri: Uri) {
@@ -316,6 +235,8 @@ class ProfileFragment : Fragment(), OnMapReadyCallback {
                             startActivity(intent)
                             requireActivity().finish()
                         }
+
+                        else -> {}
                     }
                 }
             }

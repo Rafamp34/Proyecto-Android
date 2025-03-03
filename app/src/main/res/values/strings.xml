@@ -1,13 +1,7 @@
 <resources>
     <string name="app_name">UMusicApp</string>
-    <string name="login_identifier_hint">Identifier</string>
-    <string name="login_password_hint">Password</string>
-    <string name="login_access">Access</string>
     <string name="login_error">Incorrect user or password</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="login_register">Don\'t have an account? Register</string>
-    <string name="login_email_hint">email</string>
-    <string name="login_repeat_password_hint">Repeat password</string>
     <string name="login_not_registered">User cannot be registered</string>
     <string name="login_auth_failed">Incorrect identifier or password</string>
     <string name="home">Home</string>
@@ -20,6 +14,21 @@
     <string name="view_all" />
     <string name="logout" />
     <string name="songs" />
+    <string name="register_title">Crear cuenta</string>
+    <string name="register_subtitle">Crea tu cuenta y empieza a disfrutar</string>
+    <string name="register_button">Registrarse</string>
+    <string name="register_to_login">¿Ya tienes cuenta? Iniciar sesión</string>
+    <string name="login_email_hint">Correo electrónico</string>
+    <string name="login_repeat_password_hint">Confirmar contraseña</string>
+    <string name="register_success">Registro exitoso. Ya puedes iniciar sesión.</string>
+    <string name="passwords_not_match">Las contraseñas no coinciden</string>
+    <string name="login_title">Iniciar sesión</string>
+    <string name="login_subtitle">Tu música, tu experiencia</string>
+    <string name="login_identifier_hint">Email o nombre de usuario</string>
+    <string name="login_password_hint">Contraseña</string>
+    <string name="login_access">Acceder</string>
+    <string name="login_register">¿No tienes cuenta? Regístrate</string>
+    <string name="error_field_required">Este campo es obligatorio</string>
     <string name="playlists" />
     <plurals name="reported">
         <item quantity="zero">No reported incidents</item>

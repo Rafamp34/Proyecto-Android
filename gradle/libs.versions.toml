@@ -30,6 +30,7 @@ uiTestAndroid = "1.7.7"
 firebaseAppdistributionGradle = "5.1.1"
 roomCommon = "2.6.1"
 playServicesMaps = "19.0.0"
+playServicesLocation = "21.3.0"
 
 [libraries]
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "camera" }
@@ -76,6 +77,7 @@ androidx-ui-test-android = { group = "androidx.compose.ui", name = "ui-test-andr
 firebase-appdistribution-gradle = { group = "com.google.firebase", name = "firebase-appdistribution-gradle", version.ref = "firebaseAppdistributionGradle" }
 androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

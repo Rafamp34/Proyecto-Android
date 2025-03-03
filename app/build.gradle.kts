@@ -81,6 +81,7 @@ dependencies {
     implementation(libs.firebase.appdistribution.gradle)
     implementation(libs.androidx.room.common)
     implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
     kapt(libs.hilt.android.compiler)
 
     // Navigation components
