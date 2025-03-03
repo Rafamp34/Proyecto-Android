@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
             app:menu="@menu/main_toolbar"
-            app:title="Buenas noches"
+            app:title="@string/Bienvenido"
             android:textColor="@color/white"
             app:titleTextColor="@color/white" />
 
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="16dp"
-            android:text="Canciones sugeridas para ti"
+            android:text="@string/canciones_sugeridas_para_ti"
             android:textAppearance="?attr/textAppearanceHeadline6"
             android:textColor="@color/white"
             android:textStyle="bold" />

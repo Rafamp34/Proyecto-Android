@@ -37,7 +37,7 @@ class LoginViewModel @Inject constructor(
             if (result.isSuccess) _uiState.value = LoginUiState.LoggedIn
             else
                 result.exceptionOrNull()?.let {
-                    _uiState.value = LoginUiState.Error(it.toString())
+                    _uiState.value = LoginUiState.Error(it.message ?: "Error desconocido")
                 }
 
         }

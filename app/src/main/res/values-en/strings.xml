@@ -6,6 +6,7 @@
     <string name="home">Home</string>
     <string name="solved">Solved</string>
     <string name="select_photo">Select photo</string>
+
     <string name="take_picture">Take a Photo</string>
     <string name="view_all">View all</string>
     <string name="logout">Logout</string>
@@ -65,4 +66,10 @@
     <string name="delete_playlist">Delete playlist</string>
     <string name="delete_playlist_message">Are you sure you want to delete the playlist \'%1$s\'?</string>
     <string name="delete">Delete</string>
+    <string name="canciones_sugeridas_para_ti">Songs suggested for you</string>
+    <string name="Bienvenido">Welcome to UMusicApp</string>
+    <string name="search_all">¿What do you want to listen to?</string>
+    <string name="recent_search">Recent searches</string>
+    <string name="my_playlists">Your playlists</string>
+    <string name="options">Options</string>
 </resources>

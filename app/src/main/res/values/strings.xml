@@ -65,4 +65,10 @@
     <string name="delete_playlist">Eliminar playlist</string>
     <string name="delete_playlist_message">¿Estás seguro de que quieres eliminar la playlist \'%1$s\'?</string>
     <string name="delete">Eliminar</string>
+    <string name="canciones_sugeridas_para_ti">Canciones sugeridas para ti</string>
+    <string name="Bienvenido">Bienvenido a UMusicApp</string>
+    <string name="search_all">¿Qué quieres escuchar?</string>
+    <string name="recent_search">Búsquedas recientes</string>
+    <string name="my_playlists">Tus playlists</string>
+    <string name="options">Opciones</string>
 </resources>
