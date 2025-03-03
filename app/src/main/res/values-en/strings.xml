@@ -1,0 +1,68 @@
+<resources>
+    <string name="app_name">UMusicApp</string>
+    <string name="login_error">Incorrect username or password</string>
+    <string name="login_not_registered">The user cannot be registered</string>
+    <string name="login_auth_failed">Incorrect identifier or password</string>
+    <string name="home">Home</string>
+    <string name="solved">Solved</string>
+    <string name="select_photo">Select photo</string>
+    <string name="take_picture">Take a Photo</string>
+    <string name="view_all">View all</string>
+    <string name="logout">Logout</string>
+    <string name="songs">Songs</string>
+    <string name="register_title">Create account</string>
+    <string name="register_subtitle">Create your account and start enjoying</string>
+    <string name="register_button">Register</string>
+    <string name="register_to_login">Already have an account? Sign in</string>
+    <string name="login_email_hint">Email</string>
+    <string name="login_repeat_password_hint">Confirm password</string>
+    <string name="register_success">Registration successful. You can now sign in.</string>
+    <string name="passwords_not_match">Passwords do not match</string>
+    <string name="login_title">Sign in</string>
+    <string name="login_subtitle">Your music, your experience</string>
+    <string name="login_identifier_hint">Email or username</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_access">Access</string>
+    <string name="login_register">Don\'t have an account? Register</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="playlists">Playlists</string>
+    <!-- Plurals for counters -->
+    <plurals name="recent_songs">
+        <item quantity="zero">No recent songs</item>
+        <item quantity="one">%d recent song</item>
+        <item quantity="other">%d recent songs</item>
+    </plurals>
+
+    <plurals name="playlists">
+        <item quantity="zero">No playlists</item>
+        <item quantity="one">%d playlist</item>
+        <item quantity="other">%d playlists</item>
+    </plurals>
+    <plurals name="followers">
+        <item quantity="one">%d follower</item>
+        <item quantity="other">%d followers</item>
+    </plurals>
+    <plurals name="following">
+        <item quantity="one">%d following</item>
+        <item quantity="other">%d following</item>
+    </plurals>
+    <string name="profile">Profile</string>
+    <string name="playlist_cover">Playlist cover</string>
+    <string name="album_art">Album art</string>
+    <string name="search">Search</string>
+
+    <string name="edit_playlist">Edit playlist</string>
+    <string name="add_song">Add song</string>
+    <string name="add_song_to_playlist">Add song to playlist</string>
+    <string name="remove_song">Remove song</string>
+    <string name="remove_song_message">Do you want to remove %1$s from the playlist?</string>
+    <string name="remove">Remove</string>
+
+    <string name="create_playlist">Create playlist</string>
+    <string name="create">Create</string>
+    <string name="cancel">Cancel</string>
+    <string name="playlist_name">Playlist name</string>
+    <string name="delete_playlist">Delete playlist</string>
+    <string name="delete_playlist_message">Are you sure you want to delete the playlist \'%1$s\'?</string>
+    <string name="delete">Delete</string>
+</resources>
