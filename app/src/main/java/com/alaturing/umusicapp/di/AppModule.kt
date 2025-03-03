@@ -1,8 +1,8 @@
 package com.alaturing.umusicapp.di
 
 import com.alaturing.umusicapp.authentication.data.repository.*
-import com.alaturing.umusicapp.authentication.data.local.LocalDatasource.UserLocalDatasource
-import com.alaturing.umusicapp.authentication.data.local.LocalDatasource.UserLocalDatasourceDS
+import com.alaturing.umusicapp.authentication.data.local.localDatasource.UserLocalDatasource
+import com.alaturing.umusicapp.authentication.data.local.localDatasource.UserLocalDatasourceDS
 import com.alaturing.umusicapp.authentication.data.remote.*
 import dagger.Binds
 import dagger.Module

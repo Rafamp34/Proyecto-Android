@@ -2,17 +2,11 @@ package com.alaturing.umusicapp.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStoreFile
 import com.alaturing.umusicapp.authentication.data.local.AppDatabase
-import com.alaturing.umusicapp.authentication.data.local.LocalDatasource.PlaylistLocalDatasourceDS
-import com.alaturing.umusicapp.authentication.data.local.LocalDatasource.SongLocalDatasourceDS
-import com.alaturing.umusicapp.authentication.data.local.LocalDatasource.UserLocalDatasourceDS
-import com.alaturing.umusicapp.authentication.data.local.daos.ArtistDao
-import com.alaturing.umusicapp.authentication.data.local.daos.PlaylistDao
-import com.alaturing.umusicapp.authentication.data.local.daos.SongDao
-import com.alaturing.umusicapp.authentication.data.local.daos.UserDao
+import com.alaturing.umusicapp.authentication.data.local.localDatasource.PlaylistLocalDatasourceDS
+import com.alaturing.umusicapp.authentication.data.local.localDatasource.SongLocalDatasourceDS
+import com.alaturing.umusicapp.authentication.data.local.localDatasource.UserLocalDatasourceDS
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides

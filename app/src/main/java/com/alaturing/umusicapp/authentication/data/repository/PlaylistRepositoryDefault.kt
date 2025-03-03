@@ -1,7 +1,7 @@
 package com.alaturing.umusicapp.authentication.data.repository
 
 import android.net.Uri
-import com.alaturing.umusicapp.authentication.data.local.LocalDatasource.PlaylistLocalDatasourceDS
+import com.alaturing.umusicapp.authentication.data.local.localDatasource.PlaylistLocalDatasourceDS
 import com.alaturing.umusicapp.authentication.data.remote.PlaylistRemoteDatasource
 import com.alaturing.umusicapp.main.playlist.model.Playlist
 import com.alaturing.umusicapp.main.song.model.Song

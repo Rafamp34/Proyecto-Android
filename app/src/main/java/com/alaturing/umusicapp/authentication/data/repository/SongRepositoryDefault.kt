@@ -1,6 +1,6 @@
 package com.alaturing.umusicapp.authentication.data.repository
 
-import com.alaturing.umusicapp.authentication.data.local.LocalDatasource.SongLocalDatasource
+import com.alaturing.umusicapp.authentication.data.local.localDatasource.SongLocalDatasource
 import com.alaturing.umusicapp.authentication.data.remote.SongRemoteDatasource
 import com.alaturing.umusicapp.main.song.model.Song
 import kotlinx.coroutines.flow.Flow

@@ -1,4 +1,4 @@
-package com.alaturing.umusicapp.authentication.data.local.LocalDatasource
+package com.alaturing.umusicapp.authentication.data.local.localDatasource
 
 import com.alaturing.umusicapp.authentication.model.User
 import javax.inject.Inject

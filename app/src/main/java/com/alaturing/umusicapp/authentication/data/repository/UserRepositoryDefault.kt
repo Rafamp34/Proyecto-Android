@@ -1,7 +1,7 @@
 package com.alaturing.umusicapp.authentication.data.repository
 
 import com.alaturing.umusicapp.authentication.model.User
-import com.alaturing.umusicapp.authentication.data.local.LocalDatasource.UserLocalDatasource
+import com.alaturing.umusicapp.authentication.data.local.localDatasource.UserLocalDatasource
 import com.alaturing.umusicapp.authentication.data.remote.UserRemoteDatasource
 import javax.inject.Inject
 

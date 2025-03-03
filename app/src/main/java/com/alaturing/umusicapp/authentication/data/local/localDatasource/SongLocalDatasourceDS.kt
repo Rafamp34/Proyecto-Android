@@ -1,8 +1,7 @@
-package com.alaturing.umusicapp.authentication.data.local.LocalDatasource
+package com.alaturing.umusicapp.authentication.data.local.localDatasource
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.alaturing.umusicapp.main.song.model.Song
 import com.google.gson.Gson

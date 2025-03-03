@@ -1,7 +1,7 @@
 package com.alaturing.umusicapp.di
 
 import android.content.Context
-import com.alaturing.umusicapp.authentication.data.local.LocalDatasource.UserLocalDatasource
+import com.alaturing.umusicapp.authentication.data.local.localDatasource.UserLocalDatasource
 import com.alaturing.umusicapp.authentication.data.remote.AuthenticationInterceptor
 import com.alaturing.umusicapp.authentication.data.remote.PlaylistRemoteDatasource
 import com.alaturing.umusicapp.authentication.data.remote.PlaylistRemoteDatasourceStrapi

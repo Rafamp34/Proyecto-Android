@@ -1,4 +1,4 @@
-package com.alaturing.umusicapp.authentication.data.local.LocalDatasource
+package com.alaturing.umusicapp.authentication.data.local.localDatasource
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
