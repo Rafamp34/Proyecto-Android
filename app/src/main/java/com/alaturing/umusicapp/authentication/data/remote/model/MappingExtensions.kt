@@ -86,7 +86,7 @@ fun PlaylistResponse.toModel(): Playlist {
         id = this.id,
         name = this.attributes.name,
         author = this.attributes.author,
-        duration = durationInSeconds, // Asignar el valor convertido
+        duration = durationInSeconds,
         imageUrl = processImageUrl(this.attributes.image?.data?.attributes?.url),
         songs = songsList,
         userId = userId

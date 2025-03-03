@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val playlistRepository: PlaylistRepository  // Añadir esta dependencia
+    private val playlistRepository: PlaylistRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<ProfileUiState>(ProfileUiState.Loading)
@@ -51,15 +51,6 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             playlistRepository.readAll().onSuccess { playlists ->
                 _userPlaylists.value = playlists.filter { it.author == userName }
-            }
-        }
-    }
-
-    fun createPlaylist(name: String, author: String) {
-        viewModelScope.launch {
-            // Pasar null como imageId
-            playlistRepository.createPlaylist(name, author, null).onSuccess {
-                loadUserPlaylists(author)
             }
         }
     }

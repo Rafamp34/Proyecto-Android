@@ -15,11 +15,8 @@ class SongRemoteDatasourceStrapi @Inject constructor(
             val response = api.getSongs()
             if (response.isSuccessful && response.body() != null) {
                 val songs = response.body()!!.data.map { it.toSong() }
-                Log.d("SongRemoteDS", "Songs loaded: ${songs.size}")
                 Result.success(songs)
             } else {
-                Log.e("SongRemoteDS", "Error loading songs: ${response.code()}")
-                Log.e("SongRemoteDS", "Error body: ${response.errorBody()?.string()}")
                 Result.failure(RuntimeException("Error loading songs: ${response.code()}"))
             }
         } catch (e: Exception) {
@@ -33,11 +30,8 @@ class SongRemoteDatasourceStrapi @Inject constructor(
             val response = api.getSongById(id)
             if (response.isSuccessful && response.body() != null) {
                 val song = response.body()!!.data.toSong()
-                Log.d("SongRemoteDS", "Song loaded: ${song.name}")
                 Result.success(song)
             } else {
-                Log.e("SongRemoteDS", "Error loading song: ${response.code()}")
-                Log.e("SongRemoteDS", "Error body: ${response.errorBody()?.string()}")
                 Result.failure(RuntimeException("Error loading song: ${response.code()}"))
             }
         } catch (e: Exception) {

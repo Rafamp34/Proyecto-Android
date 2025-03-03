@@ -23,20 +23,7 @@ class SongLocalDatasourceDS @Inject constructor(
         return gson.fromJson(songsJson, type)
     }
 
-    suspend fun saveSongs(songs: List<Song>) {
-        val songsJson = gson.toJson(songs)
-        preferences.edit { prefs ->
-            prefs[songsKey] = songsJson
-        }
-    }
-
     suspend fun getSongById(id: Int): Song? {
         return getAllSongs().find { it.id == id }
-    }
-
-    suspend fun clear() {
-        preferences.edit { prefs ->
-            prefs.remove(songsKey)
-        }
     }
 }

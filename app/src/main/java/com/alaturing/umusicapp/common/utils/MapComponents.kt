@@ -1,6 +1,5 @@
 package com.alaturing.umusicapp.common.utils
 
-import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -64,13 +63,6 @@ class MapComponents(private val fragment: Fragment) {
     }
 
     /**
-     * Establece un listener para cuando el mapa esté listo.
-     */
-    fun setOnMapReadyListener(listener: (GoogleMap) -> Unit) {
-        onMapReadyListener = listener
-    }
-
-    /**
      * Muestra un mapa en un BottomSheet con la ubicación del usuario.
      */
     fun showMapBottomSheet() {
@@ -108,17 +100,4 @@ class MapComponents(private val fragment: Fragment) {
         map?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
     }
 
-    /**
-     * Mueve la cámara a la ubicación especificada.
-     */
-    fun moveCamera(latLng: LatLng, zoom: Float = 15f) {
-        map?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom))
-    }
-
-    /**
-     * Obtiene la ubicación actual del usuario.
-     */
-    fun getUserLocation() {
-        locationComponents.requestLocationPermissionAndGetLocation()
-    }
 }

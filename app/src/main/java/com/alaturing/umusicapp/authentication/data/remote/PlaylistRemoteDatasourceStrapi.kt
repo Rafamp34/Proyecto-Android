@@ -22,7 +22,6 @@ class PlaylistRemoteDatasourceStrapi @Inject constructor(
     private val api: StrapiApi,
     @ApplicationContext private val context: Context
 ) : PlaylistRemoteDatasource {
-    data class ImageData(val id: Int)
 
     private fun calculateTotalDuration(songs: List<Song>): Int {
         return songs.sumOf { it.duration }
@@ -93,22 +92,15 @@ class PlaylistRemoteDatasourceStrapi @Inject constructor(
             // Formatear la duración como "mm:ss"
             val newDurationFormatted = formatDuration(newDuration)
 
-            // Log para depuración
-            Log.d("PlaylistRemoteDatasource", "Updated songs: ${updatedSongs.map { it.id }}")
-            Log.d("PlaylistRemoteDatasource", "New duration: $newDurationFormatted")
-
             val response = api.updatePlaylist(
                 playlistId,
                 PlaylistUpdateBody(
                     PlaylistUpdateData(
                         song_IDS = updatedSongs.map { it.id },
-                        duration = newDurationFormatted  // Enviar la duración como String
+                        duration = newDurationFormatted
                     )
                 )
             )
-
-            // Log para depuración
-            Log.d("PlaylistRemoteDatasource", "Response: ${response.isSuccessful}, Code: ${response.code()}")
 
             if (response.isSuccessful) {
                 Result.success(Unit)
@@ -136,22 +128,15 @@ class PlaylistRemoteDatasourceStrapi @Inject constructor(
             // Formatear la duración como "mm:ss"
             val newDurationFormatted = formatDuration(newDuration)
 
-            // Log para depuración
-            Log.d("PlaylistRemoteDatasource", "Updated songs: ${updatedSongs.map { it.id }}")
-            Log.d("PlaylistRemoteDatasource", "New duration: $newDurationFormatted")
-
             val response = api.updatePlaylist(
                 playlistId,
                 PlaylistUpdateBody(
                     PlaylistUpdateData(
                         song_IDS = updatedSongs.map { it.id },
-                        duration = newDurationFormatted  // Enviar la duración como String
+                        duration = newDurationFormatted
                     )
                 )
             )
-
-            // Log para depuración
-            Log.d("PlaylistRemoteDatasource", "Response: ${response.isSuccessful}, Code: ${response.code()}")
 
             if (response.isSuccessful) {
                 Result.success(Unit)
@@ -170,7 +155,7 @@ class PlaylistRemoteDatasourceStrapi @Inject constructor(
                     data = CreatePlaylistData(
                         name = name,
                         author = author,
-                        duration = "0:00",  // Formato inicial en mm:ss
+                        duration = "0:00",
                         image = imageId
                     )
                 )
@@ -211,12 +196,9 @@ class PlaylistRemoteDatasourceStrapi @Inject constructor(
             if (response.isSuccessful) {
                 Result.success(Unit)
             } else {
-                Log.e("PlaylistRemoteDS", "Error deleting playlist: ${response.code()}")
-                Log.e("PlaylistRemoteDS", "Error body: ${response.errorBody()?.string()}")
                 Result.failure(RuntimeException("Error deleting playlist: ${response.code()}"))
             }
         } catch (e: Exception) {
-            Log.e("PlaylistRemoteDS", "Exception deleting playlist", e)
             Result.failure(e)
         }
     }

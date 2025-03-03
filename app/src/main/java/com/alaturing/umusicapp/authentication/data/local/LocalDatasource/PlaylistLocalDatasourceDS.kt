@@ -16,7 +16,6 @@ class PlaylistLocalDatasourceDS @Inject constructor(
     private val gson: Gson
 ) {
     private val playlistsKey = stringPreferencesKey("playlists")
-    private val songsKey = stringPreferencesKey("playlist_songs")
 
     suspend fun savePlaylists(playlists: List<Playlist>) {
         val playlistsJson = gson.toJson(playlists)
@@ -46,13 +45,6 @@ class PlaylistLocalDatasourceDS @Inject constructor(
         val songsJson = prefs[key] ?: return emptyList()
         val type = object : TypeToken<List<Song>>() {}.type
         return gson.fromJson(songsJson, type)
-    }
-
-    suspend fun clear() {
-        preferences.edit { prefs ->
-            prefs.remove(playlistsKey)
-            // También podríamos buscar y eliminar todas las claves que empiecen con "playlist_songs_"
-        }
     }
 
     suspend fun deletePlaylist(id: Int) {

@@ -13,7 +13,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.alaturing.umusicapp.authentication.ui.AuthenticationActivity
-import com.alaturing.umusicapp.main.NavigationSharedViewModel
 import com.alaturing.umusicapp.R
 import com.alaturing.umusicapp.databinding.FragmentHomeBinding
 import com.alaturing.umusicapp.main.playlist.PlaylistsAdapter
@@ -25,7 +24,6 @@ import kotlinx.coroutines.launch
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private val viewModel: HomeViewModel by activityViewModels()
-    private val navViewModel: NavigationSharedViewModel by activityViewModels()
     private lateinit var playlistsAdapter: PlaylistsAdapter
     private lateinit var songsAdapter: SongsAdapter
 
@@ -73,7 +71,6 @@ class HomeFragment : Fragment() {
         )
         binding.playlistsGrid.adapter = playlistsAdapter
 
-        // Setup Songs List
         songsAdapter = SongsAdapter()
         binding.songsRecyclerView.adapter = songsAdapter
     }
@@ -92,7 +89,7 @@ class HomeFragment : Fragment() {
                             requireActivity().finish()
                         }
                         else -> {
-                            // Manejar otros estados si es necesario
+
                         }
                     }
                 }

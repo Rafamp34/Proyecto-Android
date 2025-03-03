@@ -209,12 +209,10 @@ class ProfileFragment : Fragment() {
                                     R.plurals.following, following, following
                                 )
 
-                                Log.d("ProfileFragment", "Loading image URL: $imageUrl")
                                 if (imageUrl != null) {
                                     try {
                                         binding.userImage.load(imageUrl)
                                     } catch (e: Exception) {
-                                        Log.e("ProfileFragment", "Error loading image", e)
                                         binding.userImage.setImageResource(R.drawable.ic_person)
                                     }
                                 } else {
