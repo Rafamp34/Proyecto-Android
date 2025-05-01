@@ -5,6 +5,8 @@ plugins {
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
     id("androidx.navigation.safeargs.kotlin")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -111,6 +113,22 @@ dependencies {
     kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation (libs.gson)
+
+    // Firebase BoM (Bill of Materials)
+    implementation(libs.firebase.bom)
+
+    // Autenticación
+    implementation(libs.firebase.auth.ktx)
+
+    // Cloud Firestore
+    implementation(libs.firebase.firestore.ktx)
+
+    // Firebase Storage para imágenes
+    implementation(libs.firebase.storage.ktx)
+
+    // Analytics (opcional pero recomendado)
+    implementation(libs.firebase.analytics.ktx)
+    implementation(libs.firebase.crashlytics.ktx)
 
 }
 
