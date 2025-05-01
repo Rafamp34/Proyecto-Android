@@ -147,7 +147,6 @@ class SongRepositoryFirebase @Inject constructor(
                 emit(Result.success(songs))
             }
         } catch (e: Exception) {
-            // Si falla, no emitimos error para que la UI siga usando los datos locales
         }
     }
 
